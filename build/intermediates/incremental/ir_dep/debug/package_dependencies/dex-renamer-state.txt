@@ -1,0 +1,4 @@
+#Sat Nov 10 18:55:23 PST 2018
+base.0=C\:\\Users\\Anisha\\AndroidProjects\\git\\ftcSource\\ftc_app-4.3\\TeamCode\\build\\intermediates\\transforms\\dexMerger\\debug\\10
+path.0=classes.dex
+renamed.0=classes.dex
