@@ -51,7 +51,7 @@ import com.qualcomm.robotcore.util.Range;
  */
 
 @TeleOp(name="First OpMode", group="SCHS")
-//@Disabled
+@Disabled
 public class MyFirstOpMode extends LinearOpMode {
 
     // Declare OpMode members.

@@ -1,9 +1,12 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.util.Log;
+
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -20,8 +23,6 @@ public class SCHSController extends LinearOpMode {
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
-    private DcMotor motorLeft = null;
-    private DcMotor motorRight = null;
 
     public void initialize() {
         riley = new Raiderbot();
@@ -31,23 +32,23 @@ public class SCHSController extends LinearOpMode {
         riley.dropFromLander();
         riley.orientRobot();
         riley.depositMascot();
-        riley.goToCrater();
 
     }
 
     @Override
     public void runOpMode() throws InterruptedException {
-        telemetry.addData("Status", "Initialized");
-        telemetry.update();
         initialize();
 
+        telemetry.addData("Status", "Initialized");
+        telemetry.update();
+
         // Initialize the motor (same as name on phone)
-        motorLeft = hardwareMap.get(DcMotor.class, "leftMotor");
-        motorRight = hardwareMap.get(DcMotor.class, "rightMotor");
+        //motorLeft = hardwareMap.get(DcMotor.class, "leftMotor");
+        //motorRight = hardwareMap.get(DcMotor.class, "rightMotor");
 
         // set forward direction
-        motorLeft.setDirection(Direction.FORWARD);
-        motorRight.setDirection(Direction.REVERSE);
+        //motorLeft.setDirection(Direction.FORWARD);
+        //motorRight.setDirection(Direction.REVERSE);
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -56,7 +57,13 @@ public class SCHSController extends LinearOpMode {
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
 
-            // Setup a variable save power level for telemetry
+            Log.d("Status" , "inside runOpMode after start");
+
+            riley.depositMascot(hardwareMap);
+
+            //riley.goToCrater(hardwareMap);
+
+            /*// Setup a variable save power level for telemetry
             double powerStart;
             double powerStop;
 
@@ -78,7 +85,7 @@ public class SCHSController extends LinearOpMode {
             // stop motor
             //motorLeft.setPower(powerStop);
             //motorRight.setPower(powerStop);
-
+*/
             // Show the elapsed game time
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.update();

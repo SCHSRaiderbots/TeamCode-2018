@@ -45,7 +45,7 @@ import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.*;
  */
 
 @TeleOp(name="Hello Motor", group="SCHS")
-//@Disabled
+@Disabled
 public class HelloMotor extends LinearOpMode {
 
     // Declare OpMode members.

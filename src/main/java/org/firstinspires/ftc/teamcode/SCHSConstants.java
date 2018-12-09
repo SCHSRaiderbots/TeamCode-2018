@@ -1,9 +1,9 @@
 package org.firstinspires.ftc.teamcode;
 
-public class SCHSConstants {
+public final class SCHSConstants {
 
     // distance measurements for each movement
-    static final int moveFromLanderDist = 10;
+    static final int MOVE_FROM_LANDER_DIST= 100;
     static final int goToWallDist = 10;
     static final int goToPictureDist = 10;
     static final int goToDepotDist = 10;
@@ -27,4 +27,9 @@ public class SCHSConstants {
     static final int picMoon = 3;
     static final int picStars = 2;
 
+    // power constants
+    static final double POWER_FULL_FORWARD = 1;
+    static final double POWER_FULL_BACKWARD = -1;
+    static final double POWER_HALF_FORWARD = 0.5;
+    static final double POWER_HALF_BACKWARD = -0.5;
 }
