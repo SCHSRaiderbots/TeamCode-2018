@@ -29,6 +29,12 @@ public class SCHSController extends LinearOpMode {
         botTimer = new SCHSTimer();
         botLocation = new SCHSLocation();
 
+        Log.d("Status" , "before riley is initialized");
+
+        riley.initialize(hardwareMap);
+
+        Log.d("Status" , "initializied riley in controller class");
+
         riley.dropFromLander();
         riley.orientRobot();
         riley.depositMascot();
@@ -59,7 +65,7 @@ public class SCHSController extends LinearOpMode {
 
             Log.d("Status" , "inside runOpMode after start");
 
-            riley.depositMascot(hardwareMap);
+            riley.depositMascot();
 
             //riley.goToCrater(hardwareMap);
 
