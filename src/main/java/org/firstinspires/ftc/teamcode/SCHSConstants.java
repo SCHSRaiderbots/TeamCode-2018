@@ -2,15 +2,15 @@ package org.firstinspires.ftc.teamcode;
 
 public final class SCHSConstants {
 
-    // distance measurements for each movement
-    static final int MOVE_FROM_LANDER_DIST = 100;
+    // distance measurements for each movement in inches
+    static final int MOVE_FROM_LANDER_DIST = 12;
     static final int GO_TO_WALL_DIST = 10;
     static final int GO_TO_PICTURE_DIST = 10;
     static final int GO_TO_DEPOT_DIST = 10;
     static final int GO_TO_CRATER_DIST = 10;
 
     // angle measurements for each turn
-    static final int TURN_TO_WALL_ANGLE = 90;
+    static final int TURN_TO_WALL_ANGLE = 180;
     static final int TURN_TO_PICTURE_ANGLE = 90;
     static final int DEPOT_ZONE_TURN_ANGLE = 90;
     static final int CRATER_ZONE_TURN_ANGLE = 90;
@@ -29,7 +29,7 @@ public final class SCHSConstants {
     static final int picMoon = 3;
     static final int picStars = 2;
 
-    // power constants
+    // power constants between 1 and -1
     static final double POWER_FULL_FORWARD = 1;
     static final double POWER_FULL_BACKWARD = -1;
     static final double POWER_HALF_FORWARD = 0.5;
@@ -39,4 +39,14 @@ public final class SCHSConstants {
     static final int CHMOTOR_COUNTS_PER_REVOLUTION = 288;
     static final int REAR_WHEEL_BASE_= 12; //inches
     static final double TRACTION_WHEEL_DIAMETER = 90 * 0.0393701; //90mm converted to inches
+
+    //formula for inches to counts (encoder value): 288 counts/revolution
+    //1 revolution = 90pi mm = 3.54331pi inches
+    //total counts = 288*rev
+    //x inches / 3.54331pi = # rev
+    //encoder value = (288*x)/(3.54331pi) = 310.466 at x = 12 inches
+
+    //formula for degrees (encoder value): (a/360)*(3.54331pi) = y inches
+    //encoder value = (288*y)/(12pi) = 310.466 at y inches for a degrees
+    //at a = 90 degrees, encoder value = 243.839
 }
