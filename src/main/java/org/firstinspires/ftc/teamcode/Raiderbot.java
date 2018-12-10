@@ -16,6 +16,8 @@ public class Raiderbot {
     public void initialize(HardwareMap hardwareMap) {
         minArm = new SCHSArm();
         landerArm = new SCHSArm();
+        robotSensors = new SCHSSensor();
+
         robotMotors = new SCHSMotor();
 
         if (robotMotors == null) {
@@ -27,14 +29,12 @@ public class Raiderbot {
         robotMotors.initialize(hardwareMap);
 
         Log.d("Status" , " Raiderbot:initialize:after robotMotors initialized");
-
-        robotSensors = new SCHSSensor();
     }
 
     public void goToCrater() {
 
         Log.d("Status" , "inside dropFromLander method");
-        robotMotors.moveToPosition(POWER_HALF_FORWARD , MOVE_FROM_LANDER_DIST);
+        robotMotors.moveToPosition(POWER_FULL_FORWARD, MOVE_FROM_LANDER_DIST);
     }
 
     public void orientRobot() {
@@ -44,29 +44,29 @@ public class Raiderbot {
     public void depositMascot() {
 
         //first move away from lander
-        robotMotors.moveToPosition(POWER_HALF_FORWARD , MOVE_FROM_LANDER_DIST );
+        robotMotors.moveToPosition(POWER_FULL_FORWARD, MOVE_FROM_LANDER_DIST );
         Log.d("Status" , "Raiderbot:depositMascot: after move away from lander");
-        robotSensors.checkAngleAndCorrect();
+        //robotSensors.checkAngleAndCorrect();
 
         //turn towards the wall
         robotMotors.turnAtAngle(TURN_TO_WALL_DIRECTION , TURN_TO_WALL_ANGLE);
         Log.d("Status" , "Raiderbot:depositMascot: after turn to wall");
-        robotSensors.checkAngleAndCorrect();
+        //robotSensors.checkAngleAndCorrect();
 
         //move towards to wall
-        robotMotors.moveToPosition(POWER_HALF_FORWARD , GO_TO_WALL_DIST );
-        Log.d("Status" , "Raiderbot:depositMascot: after move to wall");
-        robotSensors.checkAngleAndCorrect();
+        //robotMotors.moveToPosition(POWER_HALF_FORWARD , GO_TO_WALL_DIST );
+        //Log.d("Status" , "Raiderbot:depositMascot: after move to wall");
+        //robotSensors.checkAngleAndCorrect();
 
         //turn towards the picture
-        robotMotors.turnAtAngle(TURN_TO_PICTURE_DIRECTION , TURN_TO_PICTURE_ANGLE);
-        Log.d("Status" , "Raiderbot:depositMascot: after turn to picture");
-        robotSensors.checkAngleAndCorrect();
+        //robotMotors.turnAtAngle(TURN_TO_PICTURE_DIRECTION , TURN_TO_PICTURE_ANGLE);
+        //Log.d("Status" , "Raiderbot:depositMascot: after turn to picture");
+        //robotSensors.checkAngleAndCorrect();
 
         //move towards the picture
-        robotMotors.moveToPosition(POWER_HALF_FORWARD , GO_TO_PICTURE_DIST);
-        Log.d("Status" , "Raiderbot:depositMascot: after move to picture");
-        robotSensors.checkAngleAndCorrect();
+        //robotMotors.moveToPosition(POWER_HALF_FORWARD , GO_TO_PICTURE_DIST);
+        //Log.d("Status" , "Raiderbot:depositMascot: after move to picture");
+        //robotSensors.checkAngleAndCorrect();
 
     }
 

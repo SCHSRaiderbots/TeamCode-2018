@@ -35,14 +35,11 @@ public class SCHSController extends LinearOpMode {
 
         Log.d("Status" , "initializied riley in controller class");
 
-        riley.dropFromLander();
-        riley.orientRobot();
-        riley.depositMascot();
-
     }
 
     @Override
     public void runOpMode() throws InterruptedException {
+        Log.d("Status" , "Controller:runOpMode: program started");
         initialize();
 
         telemetry.addData("Status", "Initialized");

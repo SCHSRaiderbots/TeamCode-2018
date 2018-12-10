@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode;
 public final class SCHSConstants {
 
     // distance measurements for each movement
-    static final int MOVE_FROM_LANDER_DIST= 100;
+    static final int MOVE_FROM_LANDER_DIST = 100;
     static final int GO_TO_WALL_DIST = 10;
     static final int GO_TO_PICTURE_DIST = 10;
     static final int GO_TO_DEPOT_DIST = 10;
