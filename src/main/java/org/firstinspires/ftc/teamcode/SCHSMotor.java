@@ -4,6 +4,7 @@ import android.util.Log;
 
 import static org.firstinspires.ftc.teamcode.SCHSConstants.*;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import static com.qualcomm.robotcore.hardware.DcMotor.*;
 
@@ -17,8 +18,8 @@ public class SCHSMotor extends SCHSController {
     public void initialize(HardwareMap hardwareMap) {
         motorLeft = hardwareMap.get(DcMotor.class, "leftMotor");
         motorRight = hardwareMap.get(DcMotor.class, "rightMotor");
-        motorLeft.setDirection(Direction.FORWARD);
-        motorRight.setDirection(Direction.REVERSE);
+        motorLeft.setDirection(Direction.REVERSE);
+        motorRight.setDirection(Direction.FORWARD);
 
     }
 
@@ -30,7 +31,7 @@ public class SCHSMotor extends SCHSController {
         return motorRight;
     }
 
-    public void moveToPosition(double powerStart , int position) {
+    public void moveToPosition(double powerStart , int position) throws InterruptedException {
 
         Log.d("Status" , "SCHSMotor:moveToPosition: before movement");
 
@@ -38,6 +39,12 @@ public class SCHSMotor extends SCHSController {
 
         motorLeft.setMode(RunMode.STOP_AND_RESET_ENCODER);
         motorRight.setMode(RunMode.STOP_AND_RESET_ENCODER);
+
+        while(motorLeft.getCurrentPosition() != 0 || motorRight.getCurrentPosition() != 0) { //Ensures encoders are zero
+            motorLeft.setMode(RunMode.STOP_AND_RESET_ENCODER);
+            motorRight.setMode(RunMode.STOP_AND_RESET_ENCODER);
+            //waitOneFullHardwareCycle(); //Needed within all loops
+        }
 
         int positionLeftMotor = motorLeft.getCurrentPosition();
         int positionRightMotor = motorRight.getCurrentPosition();
@@ -47,14 +54,11 @@ public class SCHSMotor extends SCHSController {
 
         //set the power of the motor
 
-        // set the motor position
+        // set the motor to position mode
         motorLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         motorRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         verifyDistanceAndMoveTwoMotors(powerStart , position);
-
-        motorLeft.setMode(RunMode.STOP_AND_RESET_ENCODER);
-        motorRight.setMode(RunMode.STOP_AND_RESET_ENCODER);
 
         motorLeft.setPower(0);
         motorRight.setPower(0);
@@ -64,40 +68,37 @@ public class SCHSMotor extends SCHSController {
     public void verifyDistanceAndMoveTwoMotors(double powerStart , int desiredPosition) {
 
         double countsPerInch = (CHMOTOR_COUNTS_PER_REVOLUTION) / (TRACTION_WHEEL_DIAMETER * Math.PI);
-        Log.d("Status" , "SCHSMotor:turnAtAngle:counts per inch" + countsPerInch);
+        Log.d("Status" , "SCHSMotor:verifyDistanceAndMoveTwoMotors:counts per inch" + countsPerInch);
 
         double temp = countsPerInch * desiredPosition;
-        Log.d("Status" , "SCHSMotor:turnAtAngle:temp" + temp);
+        Log.d("Status" , "SCHSMotor:verifyDistanceAndMoveTwoMotors:temp" + temp);
 
-        int totalDistanceLeft = (int)temp;
-        int totalDistanceRight = (int)temp;
+        int encoderValue = (int)temp;
 
-        int distanceMovedLeft = 0;
-        int distanceMovedRight = 0;
+        Log.d("Status" , "SCHSMotor:verifyDistanceAndMoveTwoMotors:encoder value after cast to int" + encoderValue);
 
-        Log.d("Status" , "SCHSMotor:verifyDistanceAndMoveTwoMotors:before while loop ");
+       Log.d("Status" , "SCHSMotor:verifyDistanceAndMoveTwoMotors:before while loop ");
 
-       // while (distanceMovedLeft < desiredPosition || distanceMovedRight < desiredPosition) {
+       motorLeft.setTargetPosition(encoderValue);
+       motorRight.setTargetPosition(encoderValue);
 
-            motorLeft.setTargetPosition(totalDistanceLeft);
-            motorRight.setTargetPosition(totalDistanceRight);
+        //motorLeft.setTargetPosition(500);
+        //motorRight.setTargetPosition(500);
 
-            motorLeft.setPower(powerStart);
-            motorRight.setPower(powerStart);
+        Log.d("Status" , "SCHSMotor:verifyDistanceAndMoveTwoMotors:power start" + powerStart);
 
-        distanceMovedLeft = motorLeft.getCurrentPosition();
-            distanceMovedRight = motorRight.getCurrentPosition();
+        motorLeft.setPower(powerStart);
+        motorRight.setPower(powerStart);
 
-            Log.d("Status" , "SCHSMotor:verifyDistanceAndMoveTwoMotors:distanceMovedLeft" + distanceMovedLeft);
-            Log.d("Status" , "SCHSMotor:verifyDistanceAndMoveTwoMotors:distanceMovedRight" + distanceMovedRight);
+        while(motorLeft.getCurrentPosition() < motorLeft.getTargetPosition() || motorRight.getCurrentPosition() < motorRight.getTargetPosition()) { //While target has not been reached
+            //waitOneFullHardwareCycle(); //Needed within all loops
+        }
 
-            totalDistanceLeft = desiredPosition - distanceMovedLeft;
-            totalDistanceRight = desiredPosition - distanceMovedRight;
+        int distanceMovedLeft = motorLeft.getCurrentPosition();
+        int distanceMovedRight = motorRight.getCurrentPosition();
 
-            Log.d("Status" , "SCHSMotor:verifyDistanceAndMoveTwoMotors:totalDistanceLeft" + totalDistanceLeft);
-            Log.d("Status" , "SCHSMotor:verifyDistanceAndMoveTwoMotors:totalDistanceRight" + totalDistanceRight);
-
-        //}
+        Log.d("Status" , "SCHSMotor:verifyDistanceAndMoveTwoMotors:distanceMovedLeft" + distanceMovedLeft);
+        Log.d("Status" , "SCHSMotor:verifyDistanceAndMoveTwoMotors:distanceMovedRight" + distanceMovedRight);
 
         Log.d("Status" , "SCHSMotor:verifyDistanceAndMoveTwoMotors:after while loop ");
     }
@@ -118,14 +119,15 @@ public class SCHSMotor extends SCHSController {
     }
 
     //for turning the robot, put power on one motor
-    public void turnAtAngle(int turnDirection , int turnAngle) {
+    public void turnAtAngle(double powerTurn , int turnDirection , int turnAngle) {
 
         Log.d("Status" , "SCHSMotor:turnAtAngle:turnAngle" + turnAngle);
 
         double countsPerInch = (CHMOTOR_COUNTS_PER_REVOLUTION) / (TRACTION_WHEEL_DIAMETER * Math.PI);
         Log.d("Status" , "SCHSMotor:turnAtAngle:counts per inch" + countsPerInch);
 
-        double distToTravel = (Math.PI)*(REAR_WHEEL_BASE_)*(turnAngle/360);
+        double distToTravel = 18.85;
+        //double distToTravel = (Math.PI)*(REAR_WHEEL_BASE_)*(turnAngle/360);
         Log.d("Status" , "SCHSMotor:turnAtAngle:distToTravel" + distToTravel);
 
         double temp = countsPerInch * distToTravel;
@@ -134,10 +136,23 @@ public class SCHSMotor extends SCHSController {
         int angleDistance = (int) temp;
         Log.d("Status" , "SCHSMotor:turnAtAngle:angleDistance" + angleDistance);
 
+        motorLeft.setMode(RunMode.STOP_AND_RESET_ENCODER);
+        motorRight.setMode(RunMode.STOP_AND_RESET_ENCODER);
+
+        while(motorLeft.getCurrentPosition() != 0 || motorRight.getCurrentPosition() != 0) { //Ensures encoders are zero
+            motorLeft.setMode(RunMode.STOP_AND_RESET_ENCODER);
+            motorRight.setMode(RunMode.STOP_AND_RESET_ENCODER);
+            //waitOneFullHardwareCycle(); //Needed within all loops
+        }
+
         if (turnDirection == LEFT_TURN) {
             motorRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             motorRight.setTargetPosition(angleDistance);
-            motorRight.setPower(POWER_FULL_FORWARD);
+            motorRight.setPower(powerTurn);
+
+            while(motorRight.getCurrentPosition() < motorRight.getTargetPosition()) { //While target has not been reached
+                //waitOneFullHardwareCycle(); //Needed within all loops
+            }
 
             Log.d("Status" , "SCHSMotor:turnAtAngle:left turn");
 
@@ -147,7 +162,11 @@ public class SCHSMotor extends SCHSController {
         if (turnDirection == RIGHT_TURN) {
             motorLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             motorLeft.setTargetPosition(angleDistance);
-            motorLeft.setPower(POWER_FULL_FORWARD);
+            motorLeft.setPower(powerTurn);
+
+            while(motorLeft.getCurrentPosition() < motorLeft.getTargetPosition()) { //While target has not been reached
+                //waitOneFullHardwareCycle(); //Needed within all loops
+            }
 
             Log.d("Status" , "SCHSMotor:turnAtAngle:right turn");
 

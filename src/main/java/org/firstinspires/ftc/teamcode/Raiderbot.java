@@ -27,26 +27,26 @@ public class Raiderbot {
     public void goToCrater() {
 
         //to be corrected
-        Log.d("Status" , "Raiderbot:goToCrater: inside go to crater");
-        robotMotors.moveToPosition(POWER_FULL_FORWARD, MOVE_FROM_LANDER_DIST);
+        //Log.d("Status" , "Raiderbot:goToCrater: inside go to crater");
+        //robotMotors.moveToPosition(POWER_FULL_FORWARD, MOVE_FROM_LANDER_DIST);
     }
 
     public void orientRobot() {
 
     }
 
-    public void depositMascot() {
+    public void depositMascot() throws InterruptedException {
 
         //first move away from lander
         robotMotors.moveToPosition(POWER_FULL_FORWARD, MOVE_FROM_LANDER_DIST );
         Log.d("Status" , "Raiderbot:depositMascot: after move away from lander");
         //robotSensors.checkAngleAndCorrect();
 
-        sleep(5000);
+        //sleep(5000);
 
         //turn towards the wall
-        //robotMotors.turnAtAngle(TURN_TO_WALL_DIRECTION , TURN_TO_WALL_ANGLE);
-        //Log.d("Status" , "Raiderbot:depositMascot: after turn to wall");
+        robotMotors.turnAtAngle(POWER_FULL_FORWARD, TURN_TO_WALL_DIRECTION , TURN_TO_WALL_ANGLE);
+        Log.d("Status" , "Raiderbot:depositMascot: after turn to wall");
         //robotSensors.checkAngleAndCorrect();
 
         //sleep(5000);

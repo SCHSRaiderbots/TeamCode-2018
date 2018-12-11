@@ -76,18 +76,17 @@ public class HelloMotor extends LinearOpMode {
 
             // This defines the power level; between 1 and -1.
             powerStart = 0.5;
-            powerStop = 0;
+
+            // set the motor position
+            motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            int position = 500;
+            motor.setTargetPosition(position);
 
             //set the power of the motor
             motor.setPower(powerStart);
 
-            // set the motor position
-            motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            int position = 100;
-            motor.setTargetPosition(position);
-
             // stop motor
-            motor.setPower(powerStop);
+            motor.setPower(0);
 
             // Show the elapsed game time
             telemetry.addData("Status", "Run Time: " + runtime.toString());
