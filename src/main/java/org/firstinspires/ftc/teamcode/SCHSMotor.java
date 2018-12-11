@@ -126,10 +126,8 @@ public class SCHSMotor extends SCHSController {
         double countsPerInch = (CHMOTOR_COUNTS_PER_REVOLUTION) / (TRACTION_WHEEL_DIAMETER * Math.PI);
         Log.d("Status" , "SCHSMotor:turnAtAngle:counts per inch" + countsPerInch);
 
-        //double distToTravel = 18.85;
         double distToTravel = (Math.PI)*(REAR_WHEEL_BASE_)*(turnAngle/360);
         Log.d("Status" , "SCHSMotor:turnAtAngle:distToTravel" + distToTravel);
-        //double distToTravel = (Math.PI)*(REAR_WHEEL_BASE_)*(turnAngle/360);
 
         double temp = countsPerInch * distToTravel;
         Log.d("Status" , "SCHSMotor:turnAtAngle:temp" + temp);
