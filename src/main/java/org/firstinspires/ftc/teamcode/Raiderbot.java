@@ -45,27 +45,27 @@ public class Raiderbot {
         //sleep(5000);
 
         //turn towards the wall
-        robotMotors.turnAtAngle(POWER_FULL_FORWARD, TURN_TO_WALL_DIRECTION , TURN_TO_WALL_ANGLE);
+        robotMotors.turnAtAngle(POWER_FULL_FORWARD, TURN_TO_PICTURE_DIRECTION , TURN_TO_WALL_ANGLE);
         Log.d("Status" , "Raiderbot:depositMascot: after turn to wall");
         //robotSensors.checkAngleAndCorrect();
 
         //sleep(5000);
-/*
+
         //move towards to wall
-        robotMotors.moveToPosition(POWER_HALF_FORWARD , GO_TO_WALL_DIST );
+        robotMotors.moveToPosition(POWER_FULL_FORWARD, GO_TO_WALL_DIST );
         Log.d("Status" , "Raiderbot:depositMascot: after move to wall");
         //robotSensors.checkAngleAndCorrect();
 
         //turn towards the picture
-        robotMotors.turnAtAngle(TURN_TO_PICTURE_DIRECTION , TURN_TO_PICTURE_ANGLE);
+        robotMotors.turnAtAngle(POWER_FULL_FORWARD , TURN_TO_PICTURE_DIRECTION , TURN_TO_WALL_ANGLE);
         Log.d("Status" , "Raiderbot:depositMascot: after turn to picture");
         //robotSensors.checkAngleAndCorrect();
 
         //move towards the picture
-        robotMotors.moveToPosition(POWER_HALF_FORWARD , GO_TO_PICTURE_DIST);
+        robotMotors.moveToPosition(POWER_FULL_FORWARD, GO_TO_PICTURE_DIST);
         Log.d("Status" , "Raiderbot:depositMascot: after move to picture");
         //robotSensors.checkAngleAndCorrect();
-*/
+
     }
 
     public void dropFromLander() throws InterruptedException {

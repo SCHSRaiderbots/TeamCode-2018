@@ -119,16 +119,17 @@ public class SCHSMotor extends SCHSController {
     }
 
     //for turning the robot, put power on one motor
-    public void turnAtAngle(double powerTurn , int turnDirection , int turnAngle) {
+    public void turnAtAngle(double powerTurn , int turnDirection , double turnAngle) {
 
         Log.d("Status" , "SCHSMotor:turnAtAngle:turnAngle" + turnAngle);
 
         double countsPerInch = (CHMOTOR_COUNTS_PER_REVOLUTION) / (TRACTION_WHEEL_DIAMETER * Math.PI);
         Log.d("Status" , "SCHSMotor:turnAtAngle:counts per inch" + countsPerInch);
 
-        double distToTravel = 18.85;
-        //double distToTravel = (Math.PI)*(REAR_WHEEL_BASE_)*(turnAngle/360);
+        //double distToTravel = 18.85;
+        double distToTravel = (Math.PI)*(REAR_WHEEL_BASE_)*(turnAngle/360);
         Log.d("Status" , "SCHSMotor:turnAtAngle:distToTravel" + distToTravel);
+        //double distToTravel = (Math.PI)*(REAR_WHEEL_BASE_)*(turnAngle/360);
 
         double temp = countsPerInch * distToTravel;
         Log.d("Status" , "SCHSMotor:turnAtAngle:temp" + temp);
