@@ -44,6 +44,7 @@ public class Raiderbot {
 
         //sleep(5000);
 
+        /*
         //turn towards the wall
         robotMotors.turnAtAngle(POWER_FULL_FORWARD, TURN_TO_PICTURE_DIRECTION , TURN_TO_WALL_ANGLE);
         Log.d("Status" , "Raiderbot:depositMascot: after turn to wall");
@@ -65,6 +66,7 @@ public class Raiderbot {
         robotMotors.moveToPosition(POWER_FULL_FORWARD, GO_TO_PICTURE_DIST);
         Log.d("Status" , "Raiderbot:depositMascot: after move to picture");
         //robotSensors.checkAngleAndCorrect();
+        */
 
     }
 

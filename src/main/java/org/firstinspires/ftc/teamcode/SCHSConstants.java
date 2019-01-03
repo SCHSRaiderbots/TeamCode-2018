@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode;
 public final class SCHSConstants {
 
     // distance measurements for each movement in inches
-    static final int MOVE_FROM_LANDER_DIST = 60;
+    static final int MOVE_FROM_LANDER_DIST = 120;
     static final int GO_TO_WALL_DIST = 24;
     static final int GO_TO_PICTURE_DIST = 36;
     static final int GO_TO_DEPOT_DIST = 12;
@@ -24,10 +24,10 @@ public final class SCHSConstants {
     static final int RIGHT_TURN = 2;
 
     // blue values as that the color sensor would detect from each picture - may be changed to red/green values
-    static final int picCraters = 5;
-    static final int picRover = 4;
-    static final int picMoon = 3;
-    static final int picStars = 2;
+    static final int PIC_CRATERS = 5;
+    static final int PIC_ROVER = 4;
+    static final int PIC_MOON = 3;
+    static final int PIC_STARS = 2;
 
     // power constants between 1 and -1
     static final double POWER_FULL_FORWARD = 1;
