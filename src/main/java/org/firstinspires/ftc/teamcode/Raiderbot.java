@@ -40,8 +40,24 @@ public class Raiderbot {
     public void depositMascot() throws InterruptedException {
 
         //move straight using gyro
-        robotMotors.moveStraightWithGyro(0.7, MOVE_FROM_LANDER_DIST);
-        Log.d("Status" , "Raiderbot:depositMascot: after move straight with gyro");
+        robotMotors.moveStraightWithGyro(POWER_FULL_FORWARD, MOVE_FROM_LANDER_DIST, 0);
+        //robotMotors.moveToPosition(POWER_FULL_FORWARD,MOVE_FROM_LANDER_DIST);
+        Log.d("Status" , "SCHSRaiderbot:depositMascot: after move straight with gyro");
+
+        sleep(5000);
+
+        robotMotors.turnWithGyro(0.25, 45, LEFT_TURN);
+        Log.d("Status" , "SCHSRaiderbot:depositMascot: after turn 45 with gyro");
+
+        sleep(5000);
+
+        robotMotors.turnWithGyro(0.25, 90, RIGHT_TURN);
+        Log.d("Status" , "SCHSRaiderbot:depositMascot: after turn -90 with gyro");
+
+        sleep(5000);
+
+        robotMotors.turnWithGyro(0.25, 45, LEFT_TURN);
+        Log.d("Status" , "SCHSRaiderbot:depositMascot: after turn 45 with gyro");
 
         //first move away from lander
         //robotMotors.moveToPosition(POWER_FULL_FORWARD, MOVE_FROM_LANDER_DIST );

@@ -61,6 +61,13 @@ public class SCHSMotor extends SCHSController {
         return motorRight;
     }
 
+    public int calcEncoderValue(int inches) {
+        double countsPerInch = (CHMOTOR_COUNTS_PER_REVOLUTION) / (TRACTION_WHEEL_DIAMETER * Math.PI);
+        double temp = countsPerInch * inches;
+        int valueForEncoder = (int) temp;
+        return valueForEncoder;
+    }
+
     public void moveToPosition(double powerStart, int position) throws InterruptedException {
 
         Log.d("Status", "SCHSMotor:moveToPosition: before movement");
@@ -90,22 +97,19 @@ public class SCHSMotor extends SCHSController {
 
         verifyDistanceAndMoveTwoMotors(powerStart, position);
 
-        Log.d("Status", "SCHSMotor:verifyDistanceAndMoveTwoMotors:distance Moved Final Left before power zero" + motorLeft.getCurrentPosition());
-        Log.d("Status", "SCHSMotor:verifyDistanceAndMoveTwoMotors:distance Moved Final Right before power zero" + motorRight.getCurrentPosition());
-
+        Log.d("Status", "SCHSMotor:moveToPosition:distance Moved Final Left before power zero" + motorLeft.getCurrentPosition());
+        Log.d("Status", "SCHSMotor:moveToPosition:distance Moved Final Right before power zero" + motorRight.getCurrentPosition());
 
         motorLeft.setPower(0);
         motorRight.setPower(0);
 
-        Log.d("Status", "SCHSMotor:verifyDistanceAndMoveTwoMotors:distance Moved Left after sleep Final" + motorLeft.getCurrentPosition());
-        Log.d("Status", "SCHSMotor:verifyDistanceAndMoveTwoMotors:distance Moved Right after sleep Final" + motorRight.getCurrentPosition());
+        Log.d("Status", "SCHSMotor:moveToPosition:distance Moved Left after power zero" + motorLeft.getCurrentPosition());
+        Log.d("Status", "SCHSMotor:moveToPosition:distance Moved Right after power zero" + motorRight.getCurrentPosition());
 
     }
 
-    //moving robot with both motors
+    //moving robot with both motors and encoders
     public void verifyDistanceAndMoveTwoMotors(double powerStart, int desiredPosition) {
-
-        boolean isMovingStraight = true;
 
         //converting inches to encoder values
         double countsPerInch = (CHMOTOR_COUNTS_PER_REVOLUTION) / (TRACTION_WHEEL_DIAMETER * Math.PI);
@@ -127,7 +131,7 @@ public class SCHSMotor extends SCHSController {
 
         double motorPower = powerStart;
 
-        while (motorLeft.getCurrentPosition() < encoderValue || motorRight.getCurrentPosition() < encoderValue ) { //While target has not been reached
+        while (motorLeft.getCurrentPosition() < encoderValue || motorRight.getCurrentPosition() < encoderValue) { //While target has not been reached
 
             if (motorLeft.getCurrentPosition() > motorRight.getCurrentPosition()) {
                 motorLeft.setPower(motorPower);
@@ -178,9 +182,8 @@ public class SCHSMotor extends SCHSController {
         }
     }*/
 
-    public void moveStraightWithGyro(double powerStart, int desiredPosition) {
-        //sensorGyro.calibrate();
-
+    //moves straight using gyro
+    public void moveStraightWithGyro(double powerStart, int desiredPosition, double angle) {
         motorLeft.setMode(RunMode.STOP_AND_RESET_ENCODER);
         motorRight.setMode(RunMode.STOP_AND_RESET_ENCODER);
 
@@ -192,17 +195,15 @@ public class SCHSMotor extends SCHSController {
 
         Log.d("Status" , "SCHSMotor:moveStraightWithGyro: reset encoders");
 
-        motorLeft.setMode(RunMode.RUN_USING_ENCODER);
-        motorRight.setMode(RunMode.RUN_USING_ENCODER);
-
-        //sensorGyro.resetZAxisIntegrator();
-        //Log.d("Status" , "SCHSMotor:moveStraightWithGyro: reset z axis integrator");
-
-        gyroDrive(powerStart, desiredPosition, 0.0); //desired position in inches
+        gyroDrive(powerStart, desiredPosition, angle); //desired position in inches
         Log.d("Status" , "SCHSMotor:moveStraightWithGyro: gyroDrive finished");
+
+        motorLeft.setPower(0);
+        motorRight.setPower(0);
 
     }
 
+    //aligns using gyro angles
     public void gyroDrive(double speed, double distance, double angle) {
         int     newLeftTarget;
         int     newRightTarget;
@@ -226,14 +227,14 @@ public class SCHSMotor extends SCHSController {
         Log.d("Status" , "SCHSMotor:gyroDrive: newRightTarget" + newRightTarget);
 
         // Set Target and Turn On RUN_TO_POSITION
-        motorLeft.setTargetPosition(newLeftTarget);
-        motorRight.setTargetPosition(newRightTarget);
-
         motorLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         motorRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
+        motorLeft.setTargetPosition(newLeftTarget);
+        motorRight.setTargetPosition(newRightTarget);
+
         // start motion.
-        speed = Range.clip(Math.abs(speed), 0.0, 1.0);
+        speed = Range.clip(Math.abs(speed), -1.0, 1.0);
         motorLeft.setPower(speed);
         motorRight.setPower(speed);
         Log.d("Status" , "SCHSMotor:gyroDrive: speed" + speed);
@@ -241,6 +242,11 @@ public class SCHSMotor extends SCHSController {
         double PCoeff = 0.075;
         // keep looping while we are still active, and BOTH motors are running.
         while (motorLeft.isBusy() && motorRight.isBusy()) {
+
+            Log.d("Status" , "SCHSMotor:gyroDrive:start of loop");
+
+            Log.d("Status", "SCHSMotor:gyroDrive:before gyro corrects left" + motorLeft.getCurrentPosition());
+            Log.d("Status", "SCHSMotor:gyroDrive:before gyro corrects right" + motorRight.getCurrentPosition());
 
             // adjust relative speed based on heading error.
             error = getError(angle);
@@ -271,8 +277,18 @@ public class SCHSMotor extends SCHSController {
                 PCoeff = 0.75 * PCoeff;
             }
 
+            if (distanceMovedLeft >= 0.8 * newLeftTarget || distanceMovedRight >= 0.8 * newRightTarget) {
+                speed = 0.75 * speed;
+            }
+
+            Log.d("Status" , "SCHSMotor:gyroDrive:leftSpeed" + leftSpeed);
+            Log.d("Status" , "SCHSMotor:gyroDrive:rightSpeed" + rightSpeed);
+
             motorLeft.setPower(leftSpeed);
             motorRight.setPower(rightSpeed);
+
+            Log.d("Status", "SCHSMotor:gyroDrive:after gyro corrects left" + motorLeft.getCurrentPosition());
+            Log.d("Status", "SCHSMotor:gyroDrive:after gyro corrects right" + motorRight.getCurrentPosition());
 
         }
     }
@@ -296,8 +312,8 @@ public class SCHSMotor extends SCHSController {
         return Range.clip(error * PCoeff, -1, 1);
     }
 
-    //for turning the robot, put power on one motor
-    public void turnAtAngle(double powerTurn,int turnDirection,double turnAngle) {
+    //for turning the robot, put power on one motor, based on one side, not middle
+    public void turnAtAngleEncoder(double powerTurn,int turnDirection,double turnAngle) {
 
         double countsPerInch = (CHMOTOR_COUNTS_PER_REVOLUTION) / (TRACTION_WHEEL_DIAMETER * Math.PI);
         Log.d("Status", "SCHSMotor:turnAtAngle:counts per inch" + countsPerInch);
@@ -353,6 +369,54 @@ public class SCHSMotor extends SCHSController {
 
             motorLeft.setPower(0);
         }
+
+    }
+
+    public void turnWithGyro(double turnSpeed , double turnAngle, double direction) {
+        double currGyro;
+
+        motorLeft.setMode(RunMode.STOP_AND_RESET_ENCODER);
+        motorRight.setMode(RunMode.STOP_AND_RESET_ENCODER);
+
+        while (motorLeft.getCurrentPosition() != 0 || motorRight.getCurrentPosition() != 0) { //Ensures encoders are zero
+            motorLeft.setMode(RunMode.STOP_AND_RESET_ENCODER);
+            motorRight.setMode(RunMode.STOP_AND_RESET_ENCODER);
+            //waitOneFullHardwareCycle(); //Needed within all loops
+        }
+
+        motorLeft.setMode(RunMode.RUN_WITHOUT_ENCODER);
+        motorRight.setMode(RunMode.RUN_WITHOUT_ENCODER);
+
+        double startGyro = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
+        Log.d("Status" , "SCHSMotor:turnWithGyro: startGyro" + startGyro);
+
+        currGyro = startGyro;
+
+        //left turn
+        if(direction == 1) {
+            Log.d("Status" , "SCHSMotor:turnWithGyro: entered left");
+            while (currGyro < startGyro + turnAngle) {
+                motorLeft.setPower(turnSpeed);
+                motorRight.setPower(-turnSpeed);
+                currGyro = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
+                Log.d("Status" , "SCHSMotor:turnWithGyro: currGyro" + currGyro);
+            }
+
+        } else if (direction == 2){ //right turn
+            Log.d("Status" , "SCHSMotor:turnWithGyro: entered right");
+            while (currGyro > startGyro - turnAngle) {
+                motorLeft.setPower(-turnSpeed);
+                motorRight.setPower(turnSpeed);
+                currGyro = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
+                Log.d("Status" , "SCHSMotor:turnWithGyro: currGyro" + currGyro);
+            }
+        } else {
+            Log.d("Status" , "SCHSMotor:turnWithGyro: WRONG TURN DIRECTION");
+        }
+
+        motorLeft.setPower(0);
+        motorRight.setPower(0);
+
     }
 }
 
