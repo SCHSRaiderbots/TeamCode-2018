@@ -238,12 +238,13 @@ public class SCHSMotor extends SCHSController {
         motorRight.setPower(speed);
         Log.d("Status" , "SCHSMotor:gyroDrive: speed" + speed);
 
+        double PCoeff = 0.075;
         // keep looping while we are still active, and BOTH motors are running.
         while (motorLeft.isBusy() && motorRight.isBusy()) {
 
             // adjust relative speed based on heading error.
             error = getError(angle);
-            steer = getSteer(error, 0.01);
+            steer = getSteer(error, PCoeff);
             Log.d("Status" , "SCHSMotor:gyroDrive: error" + error);
             Log.d("Status" , "SCHSMotor:gyroDrive: steer" + steer);
 
@@ -261,6 +262,13 @@ public class SCHSMotor extends SCHSController {
             {
                 leftSpeed /= max;
                 rightSpeed /= max;
+            }
+
+            int distanceMovedLeft = motorLeft.getCurrentPosition();
+            int distanceMovedRight = motorRight.getCurrentPosition();
+
+            if (distanceMovedLeft >= 0.8 * newLeftTarget || distanceMovedRight >= 0.8 * newRightTarget) {
+                PCoeff = 0.75 * PCoeff;
             }
 
             motorLeft.setPower(leftSpeed);
