@@ -16,7 +16,9 @@ public class Raiderbot {
     public void initialize(HardwareMap hardwareMap) {
         minArm = new SCHSArm();
         landerArm = new SCHSArm();
+
         robotSensors = new SCHSSensor();
+        robotSensors.initialize(hardwareMap);
 
         robotMotors = new SCHSMotor();
         robotMotors.initialize(hardwareMap);
@@ -37,9 +39,13 @@ public class Raiderbot {
 
     public void depositMascot() throws InterruptedException {
 
+        //move straight using gyro
+        robotMotors.moveStraightWithGyro(0.7, MOVE_FROM_LANDER_DIST);
+        Log.d("Status" , "Raiderbot:depositMascot: after move straight with gyro");
+
         //first move away from lander
-        robotMotors.moveToPosition(POWER_FULL_FORWARD, MOVE_FROM_LANDER_DIST );
-        Log.d("Status" , "Raiderbot:depositMascot: after move away from lander");
+        //robotMotors.moveToPosition(POWER_FULL_FORWARD, MOVE_FROM_LANDER_DIST );
+        //Log.d("Status" , "Raiderbot:depositMascot: after move away from lander");
         //robotSensors.checkAngleAndCorrect();
 
         //sleep(5000);
@@ -71,6 +77,11 @@ public class Raiderbot {
     }
 
     public void dropFromLander() throws InterruptedException {
+
+    }
+
+    public void senseBallAndSample() throws InterruptedException {
+        robotSensors.scanBallColor();
 
     }
 

@@ -53,6 +53,7 @@ public class SCHSController extends LinearOpMode {
         Log.d("Status" , "Controller:opModeIsActive: before deposit mascot");
 
         riley.depositMascot();
+        //riley.senseBallAndSample();
 
         // Show the elapsed game time
         telemetry.addData("Status", "Run Time: " + runtime.toString());
