@@ -52,7 +52,7 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 @TeleOp(name = "HelloColorSensor", group = "SCHS")
-//@Disabled
+@Disabled
 public class HelloColorSensor extends LinearOpMode {
 
   ColorSensor colorSensor;    // Hardware Device Object
@@ -92,7 +92,7 @@ public class HelloColorSensor extends LinearOpMode {
     // Note we use opModeIsActive() as our loop condition because it is an interruptible method.
     while (opModeIsActive()) {
 
-      // check the status of the x button on either gamepad.
+      /*// check the status of the x button on either gamepad.
       bCurrState = gamepad1.x;
 
       // check for button state transitions.
@@ -104,7 +104,7 @@ public class HelloColorSensor extends LinearOpMode {
       }
 
       // update previous state variable.
-      bPrevState = bCurrState;
+      bPrevState = bCurrState;*/
 
       // convert the RGB values to HSV values.
       Color.RGBToHSV(colorSensor.red() * 8, colorSensor.green() * 8, colorSensor.blue() * 8, hsvValues);

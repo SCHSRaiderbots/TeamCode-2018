@@ -23,7 +23,7 @@ public final class SCHSConstants {
     static final int LEFT_TURN = 1;
     static final int RIGHT_TURN = 2;
 
-    // blue values as that the color sensor would detect from each picture - may be changed to red/green values
+    // color values as that the color sensor would detect from each picture - may be changed to red/green/blue/alpha values
     static final int PIC_CRATERS = 5;
     static final int PIC_ROVER = 4;
     static final int PIC_MOON = 3;
@@ -34,6 +34,16 @@ public final class SCHSConstants {
     static final double POWER_FULL_BACKWARD = -1;
     static final double POWER_HALF_FORWARD = 0.5;
     static final double POWER_HALF_BACKWARD = -0.5;
+
+    //Tensor Flow Object detection
+    static final String TFOD_MODEL_ASSET = "RoverRuckus.tflite";
+    static final String LABEL_GOLD_MINERAL = "Gold Mineral";
+    static final String LABEL_SILVER_MINERAL = "Silver Mineral";
+    static final String VUFORIA_KEY = "AUnX7nP/////AAABmZjfOTd2skx4p/r+LBA29VQAFar5mbPnEfGtcl78mMIqK+EtsUOR33zwyiDCmj1oYMUx0P4eWZGi6EMhZgTM66/5llx5azKwGGxGmTJUGotbAekyZgxYR7SWDme6xMYGR68jZcR9rkvJxfB1ZKFytPXWeRpwzSAQJ0VACF/hdguUyfA6SSkF2dnc/iH76TkSV3hA4zz0v3wjHfQmmNBvrtgPklvfOTX2f+G5tBfBq75PEx52LaX+tOPTtBajR9MFwVT26kcqFz2GJCEBgjO3PX1St0xNJBqbbudKvZ+B/6xWuVhwHVqwOgy/RsuHLBFskh4n9Ec1xnuB9uCnQXrrliEtcR1TbnmIEYTX6FZtxF5H";
+    static final int FOCAL_LENGTH = 27; //mm
+    static final int REAL_HEIGHT_GOLD = 50; //mm
+    static final int IMG_HEIGHT = 2448; //pixels
+    static final int CAMERA_HEIGHT = 35; //mm
 
     //core hex motor constants
     static final double CHMOTOR_COUNTS_PER_REVOLUTION = 288;

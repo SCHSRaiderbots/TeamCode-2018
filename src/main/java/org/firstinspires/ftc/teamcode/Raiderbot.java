@@ -12,6 +12,7 @@ public class Raiderbot {
     private SCHSArm landerArm;
     private SCHSMotor robotMotors;
     private SCHSSensor robotSensors;
+    private SCHSObjectDetection robotTFlow;
 
     public void initialize(HardwareMap hardwareMap) {
         minArm = new SCHSArm();
@@ -22,6 +23,9 @@ public class Raiderbot {
 
         robotMotors = new SCHSMotor();
         robotMotors.initialize(hardwareMap);
+
+        robotTFlow = new SCHSObjectDetection();
+        robotTFlow.initialize(hardwareMap);
 
         Log.d("Status" , " Raiderbot:initialize:after robotMotors initialized");
     }
@@ -97,8 +101,44 @@ public class Raiderbot {
     }
 
     public void senseBallAndSample() throws InterruptedException {
-        robotSensors.scanBallColor();
+        robotMotors.moveStraightWithGyro(POWER_FULL_FORWARD, MOVE_FROM_LANDER_DIST, 0);
+        Log.d("Status" , "SCHSRaiderbot:senseBallAndSample: after move straight with gyro");
 
+        sleep(1000);
+
+        robotTFlow.detectGoldMineral();
+        Log.d("Status" , "SCHSRaiderbot:senseBallAndSample: after detect gold mineral");
+        int turnAngle = robotTFlow.getMineralAngle();
+        Log.d("Status" , "SCHSRaiderbot:senseBallAndSample: turn angle " + turnAngle);
+
+        sleep(1000);
+
+        int turnDirection = 0;
+        if (turnAngle < 0) {
+            turnDirection = LEFT_TURN;
+            Log.d("Status" , "SCHSRaiderbot:senseBallAndSample: left turn");
+            robotMotors.turnWithGyro(0.25 , turnAngle , turnDirection);
+            Log.d("Status" , "SCHSRaiderbot:senseBallAndSample: after turn");
+
+        } else if (turnAngle > 0){
+            turnDirection = RIGHT_TURN;
+            Log.d("Status" , "SCHSRaiderbot:senseBallAndSample: right turn");
+            robotMotors.turnWithGyro(0.25 , turnAngle , turnDirection);
+            Log.d("Status" , "SCHSRaiderbot:senseBallAndSample: after turn");
+        } else {
+            Log.d("Status" , "SCHSRaiderbot:senseBallAndSample: no turn");
+        }
+
+        sleep(1000);
+
+        robotMotors.gyroReset();
+
+        int moveDist = robotTFlow.getMineralDist();
+        Log.d("Status" , "SCHSRaiderbot:senseBallAndSample: moveDist" + moveDist);
+        robotMotors.moveStraightWithGyro(POWER_FULL_FORWARD, 48, 0);
+        //Log.d("Status", "SCHSRaiderbot: before detectGoldMineral");
+        //robotTFlow.detectGoldMineral();
+        //Log.d("Status", "SCHSRaiderbot: after detectGoldMineral");
     }
 
     public static void sleep(long sleepTime) {
