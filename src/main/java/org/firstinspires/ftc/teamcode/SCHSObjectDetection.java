@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import android.util.Log;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.vuforia.CameraDevice;
 import com.vuforia.Vuforia;
 
 import static java.lang.Thread.sleep;
@@ -23,18 +24,14 @@ public class SCHSObjectDetection {
     private int tfodMonitorViewId;
     private int mineralAngle = 0;
     private int mineralDist = 0;
+    private VuforiaLocalizer.Parameters parameters;
 
     public void initialize(HardwareMap hardwareMap) {
-        int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
+        tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
                 "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-    }
-
-    public void detectGoldMineral() throws InterruptedException {
-        Log.d("Status", "SCHSObjectDetection: inside detectGoldMineral");
-
-        initVuforia();
 
         Log.d("Status", "SCHSObjectDetection: after initVuforia");
+        initVuforia();
 
         if (ClassFactory.getInstance().canCreateTFObjectDetector()) {
             initTfod();
@@ -44,20 +41,41 @@ public class SCHSObjectDetection {
 
         Log.d("Status", "SCHSObjectDetection: after initTfod");
 
+    }
+
+    //shut down tensor flow and vuforia before exiting program
+    public void cleanShutDown() {
+        tfod.shutdown();
+
+        vuforia = null;
+        parameters = null;
+    }
+
+    public void detectGoldMineral() throws InterruptedException {
+        boolean detectedGold = false;
+        boolean detectedSilver1X = false;
+        boolean detectedSilver2X = false;
+
+        Log.d("Status", "SCHSObjectDetection: inside detectGoldMineral");
+
         if (tfod != null) {
             tfod.activate();
             Log.d("Status", "SCHSObjectDetection: after tfod.activate()");
-            //wait(10000);
-            sleep(1000);
-            Log.d("Status", "SCHSObjectDetection: after sleep");
+        }
+
+        CameraDevice.getInstance().setFlashTorchMode(true);
+
+        if (tfod != null) {
 
             // getUpdatedRecognitions() will return null if no new information is available since
             // the last time that call was made.
             long startTime = System.currentTimeMillis();
-            while(false||(System.currentTimeMillis()-startTime)<10000) {
+
+            //for (int x =0; x<1; x++) {
+            while(false||(System.currentTimeMillis() - startTime)< SCAN_BALLS_TIME) {
                 List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
                 if (updatedRecognitions != null) {
-                    Log.d("Status", "# Object Detected " + updatedRecognitions.size());
+                    Log.d("Status", "SCHSObjectDetection: # Object Detected " + updatedRecognitions.size());
 
                     if (updatedRecognitions.size() == 2) {
                         int goldMineralX = -1;
@@ -69,6 +87,12 @@ public class SCHSObjectDetection {
 
                                 mineralAngle = (int)(recognition.estimateAngleToObject(AngleUnit.DEGREES));
                                 mineralDist = calcImageDist((int)(recognition.getHeight()));
+
+                                if (detectedSilver1X == true) {
+                                    Log.d("Status", "SCHSObjectDetection: break from for");
+                                    detectedGold = true;
+                                    break;
+                                }
 
                                 /*Log.d("Status", "SCHSObjectDetection: Gold Angle value " + (int) recognition.estimateAngleToObject(AngleUnit.DEGREES));
                                 Log.d("Status", "SCHSObjectDetection: Gold Left value " + (int) recognition.getLeft());
@@ -83,9 +107,7 @@ public class SCHSObjectDetection {
 
                             } else if (silverMineral1X == -1) {
                                 silverMineral1X = (int) recognition.getLeft();
-
-                                mineralAngle = (int)(recognition.estimateAngleToObject(AngleUnit.DEGREES));
-                                mineralDist = calcImageDist((int)(recognition.getHeight()));
+                                detectedSilver1X = true;
 
                                 /*Log.d("Status", "SCHSObjectDetection: Silver Angle value " + (int) recognition.estimateAngleToObject(AngleUnit.DEGREES));
                                 Log.d("Status", "SCHSObjectDetection: Silver Left value " + (int) recognition.getLeft());
@@ -111,12 +133,21 @@ public class SCHSObjectDetection {
                                 Log.d("Status", "SCHSObjectDetection: Gold Mineral Position: Center");
                             }
                         }
+
+                        if (detectedSilver1X == true && detectedGold ==true){
+                            Log.d("Status", "SCHSObjectDetection: break from while");
+                            break;
+                        }
+
                     }
-                } //end of while
-            }
+                } //end of if
+            } //end of while/for
         }
-
-
+        CameraDevice.getInstance().setFlashTorchMode(false);
+        if (tfod != null) {
+            tfod.shutdown();
+            Log.d("Status", "SCHSObjectDetection: after tfod.shutdown()");
+        }
     }
 
     public int getMineralAngle() {
@@ -133,7 +164,7 @@ public class SCHSObjectDetection {
          */
         Log.d("Status", "SCHSObjectDetection: inside initVuforia");
 
-        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
+        parameters = new VuforiaLocalizer.Parameters();
 
         parameters.vuforiaLicenseKey = VUFORIA_KEY;
         parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;

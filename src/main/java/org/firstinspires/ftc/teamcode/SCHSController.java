@@ -35,6 +35,11 @@ public class SCHSController extends LinearOpMode {
         riley.initialize(hardwareMap);
     }
 
+    public void cleanShutDown() {
+        riley.cleanShutDown();
+
+    }
+
     @Override
     public void runOpMode() throws InterruptedException {
         Log.d("Status" , "Controller:runOpMode: program started");
@@ -54,6 +59,10 @@ public class SCHSController extends LinearOpMode {
 
         //riley.depositMascot();
         riley.senseBallAndSample();
+
+        //sleep(1000);
+
+        //cleanShutDown();
 
         // Show the elapsed game time
         telemetry.addData("Status", "Run Time: " + runtime.toString());

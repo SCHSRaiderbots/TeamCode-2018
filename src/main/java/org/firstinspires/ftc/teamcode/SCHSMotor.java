@@ -41,14 +41,6 @@ public class SCHSMotor extends SCHSController {
         gyroParameters.loggingEnabled      = false;
 
         imu = hardwareMap.get(BNO055IMU.class, "imu");
-
-        gyroReset();
-
-        Log.d("Status" , "SCHSMotor:moveStraightWithGyro: gyro done calibrating");
-
-    }
-
-    public void gyroReset() {
         imu.initialize(gyroParameters);
 
         while (!isStopRequested() && imu.isGyroCalibrated())  {
@@ -56,6 +48,13 @@ public class SCHSMotor extends SCHSController {
             sleep(50);
             idle();
         }
+
+        Log.d("Status" , "SCHSMotor:moveStraightWithGyro: gyro done calibrating");
+
+    }
+
+    //method to include cleanup before exiting program
+    public void cleanShutDown() {
 
     }
 
@@ -199,18 +198,24 @@ public class SCHSMotor extends SCHSController {
             //waitOneFullHardwareCycle(); //Needed within all loops
         }
 
+        double currAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
+        Log.d("Status" , "SCHSMotor:moveStraightWithGyro: currAngle " + currAngle);
+
         Log.d("Status" , "SCHSMotor:moveStraightWithGyro: reset encoders");
 
-        gyroDrive(powerStart, desiredPosition, angle); //desired position in inches
+        gyroDrive(powerStart, desiredPosition, angle, currAngle); //desired position in inches
         Log.d("Status" , "SCHSMotor:moveStraightWithGyro: gyroDrive finished");
 
         motorLeft.setPower(0);
         motorRight.setPower(0);
 
+        double finalAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
+        Log.d("Status" , "SCHSMotor:moveStraightWithGyro: finalAngle" + finalAngle);
+
     }
 
     //aligns using gyro angles
-    public void gyroDrive(double speed, double distance, double angle) {
+    public void gyroDrive(double speed, double distance, double angle, double currentAngle) {
         int     newLeftTarget;
         int     newRightTarget;
         double  max;
@@ -255,10 +260,11 @@ public class SCHSMotor extends SCHSController {
             //Log.d("Status", "SCHSMotor:gyroDrive:before gyro corrects right" + motorRight.getCurrentPosition());
 
             // adjust relative speed based on heading error.
-            error = getError(angle);
+            error = getError(angle, currentAngle);
+            Log.d("Status" , "SCHSMotor:gyroDrive: error " + error);
+
             steer = getSteer(error, PCoeff);
-            //Log.d("Status" , "SCHSMotor:gyroDrive: error" + error);
-            //Log.d("Status" , "SCHSMotor:gyroDrive: steer" + steer);
+            Log.d("Status" , "SCHSMotor:gyroDrive: steer " + error);
 
             // if driving in reverse, the motor correction also needs to be reversed
             if (distance < 0) {
@@ -299,12 +305,12 @@ public class SCHSMotor extends SCHSController {
         }
     }
 
-    public double getError(double targetAngle) {
+    public double getError(double targetAngle, double startAngle) {
 
         double robotError;
 
         // calculate error in -179 to +180 range  (
-        robotError = targetAngle - imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
+        robotError = (startAngle + targetAngle) - imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
         while (robotError > 180) {
             robotError -= 360;
         }
@@ -378,8 +384,10 @@ public class SCHSMotor extends SCHSController {
 
     }
 
-    public void turnWithGyro(double turnSpeed , double turnAngle, double direction) {
+    public void turnWithGyro(double turnSpeed , double orgTurnAngle, double direction) {
         double currGyro;
+
+        double turnAngle = Math.abs(orgTurnAngle);
 
         motorLeft.setMode(RunMode.STOP_AND_RESET_ENCODER);
         motorRight.setMode(RunMode.STOP_AND_RESET_ENCODER);
@@ -407,7 +415,7 @@ public class SCHSMotor extends SCHSController {
                 currGyro = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
                 Log.d("Status" , "SCHSMotor:turnWithGyro: currGyro" + currGyro);
 
-                if (currGyro >= 0.5 * (startGyro + turnAngle)) {
+                if (currGyro >= 0.3 * (startGyro + turnAngle)) {
                     turnSpeed = 0.5 * turnSpeed;
                 }
 
@@ -422,7 +430,7 @@ public class SCHSMotor extends SCHSController {
                 currGyro = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
                 Log.d("Status" , "SCHSMotor:turnWithGyro: currGyro" + currGyro);
 
-                if (currGyro <= 0.5 * (startGyro - turnAngle)) {
+                if (currGyro <= 0.3 * (startGyro - turnAngle)) {
                     turnSpeed = 0.5 * turnSpeed;
                 }
 

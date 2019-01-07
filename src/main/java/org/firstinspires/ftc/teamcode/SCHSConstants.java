@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode;
 public final class SCHSConstants {
 
     // distance measurements for each movement in inches
-    static final int MOVE_FROM_LANDER_DIST = 60;
+    static final int MOVE_FROM_LANDER_DIST = 36;
     static final int GO_TO_WALL_DIST = 24;
     static final int GO_TO_PICTURE_DIST = 36;
     static final int GO_TO_DEPOT_DIST = 12;
@@ -44,6 +44,7 @@ public final class SCHSConstants {
     static final int REAL_HEIGHT_GOLD = 50; //mm
     static final int IMG_HEIGHT = 2448; //pixels
     static final int CAMERA_HEIGHT = 35; //mm
+    static final int SCAN_BALLS_TIME = 10000; // milliseconds
 
     //core hex motor constants
     static final double CHMOTOR_COUNTS_PER_REVOLUTION = 288;
