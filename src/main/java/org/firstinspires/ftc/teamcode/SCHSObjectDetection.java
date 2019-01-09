@@ -43,13 +43,6 @@ public class SCHSObjectDetection {
 
     }
 
-    //shut down tensor flow and vuforia before exiting program
-    public void cleanShutDown() {
-        tfod.shutdown();
-
-        vuforia = null;
-        parameters = null;
-    }
 
     public void detectGoldMineral() throws InterruptedException {
         boolean detectedGold = false;
@@ -63,24 +56,23 @@ public class SCHSObjectDetection {
             Log.d("Status", "SCHSObjectDetection: after tfod.activate()");
         }
 
-        CameraDevice.getInstance().setFlashTorchMode(true);
 
         if (tfod != null) {
 
             // getUpdatedRecognitions() will return null if no new information is available since
             // the last time that call was made.
             long startTime = System.currentTimeMillis();
+            CameraDevice.getInstance().setFlashTorchMode(true);
 
-            //for (int x =0; x<1; x++) {
             while(false||(System.currentTimeMillis() - startTime)< SCAN_BALLS_TIME) {
                 List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
                 if (updatedRecognitions != null) {
                     Log.d("Status", "SCHSObjectDetection: # Object Detected " + updatedRecognitions.size());
 
-                    if (updatedRecognitions.size() == 2) {
+                    if (updatedRecognitions.size() == 3) {
                         int goldMineralX = -1;
                         int silverMineral1X = -1;
-                        //int silverMineral2X = -1;
+                        int silverMineral2X = -1;
                         for (Recognition recognition : updatedRecognitions) {
                             if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
                                 goldMineralX = (int) recognition.getLeft();
@@ -88,7 +80,7 @@ public class SCHSObjectDetection {
                                 mineralAngle = (int)(recognition.estimateAngleToObject(AngleUnit.DEGREES));
                                 mineralDist = calcImageDist((int)(recognition.getHeight()));
 
-                                if (detectedSilver1X == true) {
+                                if (detectedSilver1X == true && detectedSilver2X == true) {
                                     Log.d("Status", "SCHSObjectDetection: break from for");
                                     detectedGold = true;
                                     break;
@@ -121,20 +113,21 @@ public class SCHSObjectDetection {
                                 Log.d("Status", "SCHSObjectDetection: Distance Inches value " + calcImageDist((int)(recognition.getHeight())));*/
 
                             } else {
-                                // silverMineral2X = (int) recognition.getLeft();
+                                silverMineral2X = (int) recognition.getLeft();
+                                detectedSilver2X = true;
                             }
                         }
-                        if (goldMineralX != -1 && silverMineral1X != -1 /*&& silverMineral2X != -1*/) {
-                            if (goldMineralX < silverMineral1X /*&& goldMineralX < silverMineral2X*/) {
+                        if (goldMineralX != -1 && silverMineral1X != -1 && silverMineral2X != -1) {
+                            if (goldMineralX < silverMineral1X && goldMineralX < silverMineral2X) {
                                 Log.d("Status", "SCHSObjectDetection: Gold Mineral Position: Left");
-                            } else if (goldMineralX > silverMineral1X /*&& goldMineralX > silverMineral2X*/) {
+                            } else if (goldMineralX > silverMineral1X && goldMineralX > silverMineral2X) {
                                 Log.d("Status", "SCHSObjectDetection: Gold Mineral Position: Right");
                             } else {
                                 Log.d("Status", "SCHSObjectDetection: Gold Mineral Position: Center");
                             }
                         }
 
-                        if (detectedSilver1X == true && detectedGold ==true){
+                        if (detectedSilver1X == true && detectedGold ==true && detectedSilver2X == true){
                             Log.d("Status", "SCHSObjectDetection: break from while");
                             break;
                         }
@@ -181,6 +174,9 @@ public class SCHSObjectDetection {
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_GOLD_MINERAL, LABEL_SILVER_MINERAL);
+        tfodParameters.minimumConfidence = 0.62;
+        tfodParameters.useObjectTracker = false;
+
     }
 
     public int calcImageDist(int objectHeight) {

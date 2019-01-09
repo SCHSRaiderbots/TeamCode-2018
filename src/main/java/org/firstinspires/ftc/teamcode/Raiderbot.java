@@ -18,8 +18,8 @@ public class Raiderbot {
         minArm = new SCHSArm();
         landerArm = new SCHSArm();
 
-        robotSensors = new SCHSSensor();
-        robotSensors.initialize(hardwareMap);
+        //robotSensors = new SCHSSensor();
+        //robotSensors.initialize(hardwareMap);
 
         robotMotors = new SCHSMotor();
         robotMotors.initialize(hardwareMap);
@@ -33,7 +33,7 @@ public class Raiderbot {
     public void cleanShutDown() {
         robotMotors.cleanShutDown();
 
-        robotTFlow.cleanShutDown();
+        //robotTFlow.cleanShutDown();
     }
 
     public void goToCrater() {
@@ -55,7 +55,7 @@ public class Raiderbot {
         Log.d("Status" , "SCHSRaiderbot:depositMascot: after move straight with gyro");
 
         sleep(5000);
-
+        /*
         robotMotors.turnWithGyro(0.25, 45, LEFT_TURN);
         Log.d("Status" , "SCHSRaiderbot:depositMascot: after turn 45 with gyro");
 
@@ -150,7 +150,7 @@ public class Raiderbot {
         //Log.d("Status", "SCHSRaiderbot: after detectGoldMineral");
 
         sleep(1000);
-
+        /*
         robotMotors.moveStraightWithGyro(POWER_FULL_FORWARD , -48, 0);
         Log.d("Status" , "SCHSRaiderbot:senseBallAndSample: after move back to lander");
 
@@ -159,7 +159,7 @@ public class Raiderbot {
         robotMotors.turnWithGyro(0.25, reverseAngle, reverseDirection);
         Log.d("Status" , "SCHSRaiderbot:senseBallAndSample: reverseAngle" + reverseAngle);
         Log.d("Status" , "SCHSRaiderbot:senseBallAndSample: reverseDirection" + reverseDirection);
-
+        */
     }
 
     public static void sleep(long sleepTime) {

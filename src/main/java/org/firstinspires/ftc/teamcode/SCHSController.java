@@ -42,7 +42,7 @@ public class SCHSController extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        Log.d("Status" , "Controller:runOpMode: program started");
+
         initialize();
 
         telemetry.addData("Status", "Initialized");
@@ -52,15 +52,17 @@ public class SCHSController extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
+        Log.d("Status" , "Controller:runOpMode: program started");
+
         // run until the end of the match (driver presses STOP)
         //while (opModeIsActive()) {
 
         Log.d("Status" , "Controller:opModeIsActive: before deposit mascot");
 
-        //riley.depositMascot();
-        riley.senseBallAndSample();
+        riley.depositMascot();
+        //riley.senseBallAndSample();
 
-        //sleep(1000);
+        sleep(1000);
 
         //cleanShutDown();
 

@@ -203,7 +203,7 @@ public class SCHSMotor extends SCHSController {
 
         Log.d("Status" , "SCHSMotor:moveStraightWithGyro: reset encoders");
 
-        gyroDrive(powerStart, desiredPosition, angle, currAngle); //desired position in inches
+        gyroDrive(powerStart, desiredPosition, angle); //desired position in inches
         Log.d("Status" , "SCHSMotor:moveStraightWithGyro: gyroDrive finished");
 
         motorLeft.setPower(0);
@@ -215,7 +215,7 @@ public class SCHSMotor extends SCHSController {
     }
 
     //aligns using gyro angles
-    public void gyroDrive(double speed, double distance, double angle, double currentAngle) {
+    public void gyroDrive(double speed, double distance, double angle) {
         int     newLeftTarget;
         int     newRightTarget;
         double  max;
@@ -260,11 +260,11 @@ public class SCHSMotor extends SCHSController {
             //Log.d("Status", "SCHSMotor:gyroDrive:before gyro corrects right" + motorRight.getCurrentPosition());
 
             // adjust relative speed based on heading error.
-            error = getError(angle, currentAngle);
+            error = getError(angle);
             Log.d("Status" , "SCHSMotor:gyroDrive: error " + error);
 
             steer = getSteer(error, PCoeff);
-            Log.d("Status" , "SCHSMotor:gyroDrive: steer " + error);
+            Log.d("Status" , "SCHSMotor:gyroDrive: steer " + steer);
 
             // if driving in reverse, the motor correction also needs to be reversed
             if (distance < 0) {
@@ -305,12 +305,13 @@ public class SCHSMotor extends SCHSController {
         }
     }
 
-    public double getError(double targetAngle, double startAngle) {
+    public double getError(double targetAngle) {
 
         double robotError;
 
         // calculate error in -179 to +180 range  (
-        robotError = (startAngle + targetAngle) - imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
+        //robotError = (startAngle + targetAngle) - imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
+        robotError = targetAngle - imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
         while (robotError > 180) {
             robotError -= 360;
         }
