@@ -20,13 +20,10 @@ import static com.qualcomm.robotcore.hardware.DcMotor.*;
 
 public class SCHSMotor extends SCHSController {
 
-    private int encoderValue;
     private DcMotor motorLeft = null;
     private DcMotor motorRight = null;
-    private DcMotor motorSingle = null;
-    private HardwareMap myHWmap = null;
-    private BNO055IMU imu = null;
-    BNO055IMU.Parameters gyroParameters = new BNO055IMU.Parameters();
+    private BNO055IMU.Parameters gyroParameters;
+    private BNO055IMU imu;
 
 
     public void initialize(HardwareMap hardwareMap) {
@@ -34,6 +31,8 @@ public class SCHSMotor extends SCHSController {
         motorRight = hardwareMap.get(DcMotor.class, "rightMotor");
         motorLeft.setDirection(Direction.REVERSE);
         motorRight.setDirection(Direction.FORWARD);
+
+        gyroParameters = new BNO055IMU.Parameters();
 
         gyroParameters.mode                = BNO055IMU.SensorMode.IMU;
         gyroParameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
@@ -188,54 +187,61 @@ public class SCHSMotor extends SCHSController {
     }*/
 
     //moves straight using gyro
-    public void moveStraightWithGyro(double powerStart, int desiredPosition, double angle) {
+    public void moveStraightWithGyro(double powerStart, int desiredPosition) {
+        double currAngle = 0;
+
+        Log.d("Status" , "SCHSMotor:moveStraightWithGyro: Enter Method");
         motorLeft.setMode(RunMode.STOP_AND_RESET_ENCODER);
         motorRight.setMode(RunMode.STOP_AND_RESET_ENCODER);
 
         while (motorLeft.getCurrentPosition() != 0 || motorRight.getCurrentPosition() != 0) { //Ensures encoders are zero
             motorLeft.setMode(RunMode.STOP_AND_RESET_ENCODER);
             motorRight.setMode(RunMode.STOP_AND_RESET_ENCODER);
+            Log.d("Status" , "SCHSMotor:moveStraightWithGyro: STop and Reset Loop");
             //waitOneFullHardwareCycle(); //Needed within all loops
         }
-
-        double currAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
-        Log.d("Status" , "SCHSMotor:moveStraightWithGyro: currAngle " + currAngle);
-
         Log.d("Status" , "SCHSMotor:moveStraightWithGyro: reset encoders");
 
-        gyroDrive(powerStart, desiredPosition, angle); //desired position in inches
+        currAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
+        Log.d("Status" , "SCHSMotor:moveStraightWithGyro: currAngle " + currAngle);
+
+        gyroDrive(powerStart, desiredPosition, currAngle); //desired position in inches
         Log.d("Status" , "SCHSMotor:moveStraightWithGyro: gyroDrive finished");
 
         motorLeft.setPower(0);
         motorRight.setPower(0);
 
         double finalAngle = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
-        Log.d("Status" , "SCHSMotor:moveStraightWithGyro: finalAngle" + finalAngle);
+        Log.d("Status" , "SCHSMotor:moveStraightWithGyro: finalAngle " + finalAngle);
 
     }
 
     //aligns using gyro angles
-    public void gyroDrive(double speed, double distance, double angle) {
-        int     newLeftTarget;
-        int     newRightTarget;
-        double  max;
-        double  error;
-        double  steer;
-        double  leftSpeed;
-        double  rightSpeed;
+    public void gyroDrive(double speed, double distance, double currentAngle) {
+        int     newLeftTarget = 0;
+        int     newRightTarget = 0;
+        double  max = 0;
+        double  error = 0;
+        double  steer = 0;
+        double  leftSpeed = 0;
+        double  rightSpeed = 0;
+        double countsPerInch = 0;
+
+        Log.d("Status" , "SCHSMotor:gyroDrive: initial left position " + motorLeft.getCurrentPosition());
+        Log.d("Status" , "SCHSMotor:gyroDrive: initial right position " + motorRight.getCurrentPosition());
+
 
         //converting inches to encoder values
-        double countsPerInch = (CHMOTOR_COUNTS_PER_REVOLUTION) / (TRACTION_WHEEL_DIAMETER * Math.PI);
-        double temp = countsPerInch * distance;
-        int encoderValue = (int) temp;
+        countsPerInch = (CHMOTOR_COUNTS_PER_REVOLUTION) / (TRACTION_WHEEL_DIAMETER * Math.PI);
+        int encoderValue = (int) (countsPerInch * distance);
 
-        Log.d("Status" , "SCHSMotor:gyroDrive: encoder value" + encoderValue);
+        Log.d("Status" , "SCHSMotor:gyroDrive: encoder value " + encoderValue);
 
         // Determine new target position, and pass to motor controller
         newLeftTarget = motorLeft.getCurrentPosition() + encoderValue;
         newRightTarget = motorRight.getCurrentPosition() + encoderValue;
-        Log.d("Status" , "SCHSMotor:gyroDrive: newLeftTarget" + newLeftTarget);
-        Log.d("Status" , "SCHSMotor:gyroDrive: newRightTarget" + newRightTarget);
+        Log.d("Status" , "SCHSMotor:gyroDrive: newLeftTarget " + newLeftTarget);
+        Log.d("Status" , "SCHSMotor:gyroDrive: newRightTarget " + newRightTarget);
 
         // Set Target and Turn On RUN_TO_POSITION
         motorLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -248,19 +254,19 @@ public class SCHSMotor extends SCHSController {
         speed = Range.clip(Math.abs(speed), -1.0, 1.0);
         motorLeft.setPower(speed);
         motorRight.setPower(speed);
-        Log.d("Status" , "SCHSMotor:gyroDrive: speed" + speed);
+        Log.d("Status" , "SCHSMotor:gyroDrive: speed " + speed);
 
         double PCoeff = 0.075;
         // keep looping while we are still active, and BOTH motors are running.
         while (motorLeft.isBusy() && motorRight.isBusy()) {
 
-            //Log.d("Status" , "SCHSMotor:gyroDrive:start of loop");
+            Log.d("Status" , "SCHSMotor:gyroDrive:start of loop");
 
             //Log.d("Status", "SCHSMotor:gyroDrive:before gyro corrects left" + motorLeft.getCurrentPosition());
             //Log.d("Status", "SCHSMotor:gyroDrive:before gyro corrects right" + motorRight.getCurrentPosition());
 
             // adjust relative speed based on heading error.
-            error = getError(angle);
+            error = getError(currentAngle);
             Log.d("Status" , "SCHSMotor:gyroDrive: error " + error);
 
             steer = getSteer(error, PCoeff);
@@ -285,36 +291,43 @@ public class SCHSMotor extends SCHSController {
             int distanceMovedLeft = motorLeft.getCurrentPosition();
             int distanceMovedRight = motorRight.getCurrentPosition();
 
-            if (distanceMovedLeft >= 0.8 * newLeftTarget || distanceMovedRight >= 0.8 * newRightTarget) {
+            if (distanceMovedLeft >= 0.6 * newLeftTarget || distanceMovedRight >= 0.6 * newRightTarget) {
                 PCoeff = 0.75 * PCoeff;
             }
 
-            if (distanceMovedLeft >= 0.8 * newLeftTarget || distanceMovedRight >= 0.8 * newRightTarget) {
+            if (distanceMovedLeft >= 0.6 * newLeftTarget || distanceMovedRight >= 0.6 * newRightTarget) {
                 speed = 0.75 * speed;
             }
 
-            //Log.d("Status" , "SCHSMotor:gyroDrive:leftSpeed" + leftSpeed);
-            //Log.d("Status" , "SCHSMotor:gyroDrive:rightSpeed" + rightSpeed);
+            // if reached the desired position, exit while loop. Helps to stop turning at end of motion.
+            if (distanceMovedLeft >= newLeftTarget || distanceMovedRight >= newRightTarget) {
+                Log.d("Status" , "SCHSMotor:gyroDrive: Position reached. Break while");
+                break;
+            }
+
+            Log.d("Status" , "SCHSMotor:gyroDrive:leftSpeed " + leftSpeed);
+            Log.d("Status" , "SCHSMotor:gyroDrive:rightSpeed " + rightSpeed);
 
             motorLeft.setPower(leftSpeed);
             motorRight.setPower(rightSpeed);
 
-            //Log.d("Status", "SCHSMotor:gyroDrive:after gyro corrects left" + motorLeft.getCurrentPosition());
-            //Log.d("Status", "SCHSMotor:gyroDrive:after gyro corrects right" + motorRight.getCurrentPosition());
-
+            Log.d("Status", "SCHSMotor:gyroDrive:after gyro corrects left " + motorLeft.getCurrentPosition());
+            Log.d("Status", "SCHSMotor:gyroDrive:after gyro corrects right " + motorRight.getCurrentPosition());
         }
     }
 
-    public double getError(double targetAngle) {
+    public double getError(double startAngle) {
 
-        double robotError;
+        double robotError = 0;
 
         // calculate error in -179 to +180 range  (
         //robotError = (startAngle + targetAngle) - imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
-        robotError = targetAngle - imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
+        robotError = startAngle - imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
+
         while (robotError > 180) {
             robotError -= 360;
         }
+
         while (robotError <= -180) {
             robotError += 360;
         }
@@ -386,8 +399,8 @@ public class SCHSMotor extends SCHSController {
     }
 
     public void turnWithGyro(double turnSpeed , double orgTurnAngle, double direction) {
-        double currGyro;
-
+        double currGyro = 0;
+        double startGyro = 0;
         double turnAngle = Math.abs(orgTurnAngle);
 
         motorLeft.setMode(RunMode.STOP_AND_RESET_ENCODER);
@@ -402,7 +415,7 @@ public class SCHSMotor extends SCHSController {
         motorLeft.setMode(RunMode.RUN_WITHOUT_ENCODER);
         motorRight.setMode(RunMode.RUN_WITHOUT_ENCODER);
 
-        double startGyro = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
+        startGyro = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
         Log.d("Status" , "SCHSMotor:turnWithGyro: startGyro" + startGyro);
 
         currGyro = startGyro;

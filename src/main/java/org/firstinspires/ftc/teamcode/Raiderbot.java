@@ -18,8 +18,8 @@ public class Raiderbot {
         minArm = new SCHSArm();
         landerArm = new SCHSArm();
 
-        //robotSensors = new SCHSSensor();
-        //robotSensors.initialize(hardwareMap);
+        robotSensors = new SCHSSensor();
+        robotSensors.initialize(hardwareMap);
 
         robotMotors = new SCHSMotor();
         robotMotors.initialize(hardwareMap);
@@ -50,56 +50,8 @@ public class Raiderbot {
     public void depositMascot() throws InterruptedException {
 
         //move straight using gyro
-        robotMotors.moveStraightWithGyro(POWER_FULL_FORWARD, MOVE_FROM_LANDER_DIST, 0);
-        //robotMotors.moveToPosition(POWER_FULL_FORWARD,MOVE_FROM_LANDER_DIST);
+        robotMotors.moveStraightWithGyro(POWER_FULL_FORWARD, MOVE_FROM_LANDER_DIST);
         Log.d("Status" , "SCHSRaiderbot:depositMascot: after move straight with gyro");
-
-        sleep(5000);
-        /*
-        robotMotors.turnWithGyro(0.25, 45, LEFT_TURN);
-        Log.d("Status" , "SCHSRaiderbot:depositMascot: after turn 45 with gyro");
-
-        sleep(5000);
-
-        robotMotors.turnWithGyro(0.25, 90, RIGHT_TURN);
-        Log.d("Status" , "SCHSRaiderbot:depositMascot: after turn -90 with gyro");
-
-        sleep(5000);
-
-        robotMotors.turnWithGyro(0.25, 45, LEFT_TURN);
-        Log.d("Status" , "SCHSRaiderbot:depositMascot: after turn 45 with gyro");
-
-        //first move away from lander
-        //robotMotors.moveToPosition(POWER_FULL_FORWARD, MOVE_FROM_LANDER_DIST );
-        //Log.d("Status" , "Raiderbot:depositMascot: after move away from lander");
-        //robotSensors.checkAngleAndCorrect();
-
-        //sleep(5000);
-
-        /*
-        //turn towards the wall
-        robotMotors.turnAtAngle(POWER_FULL_FORWARD, TURN_TO_PICTURE_DIRECTION , TURN_TO_WALL_ANGLE);
-        Log.d("Status" , "Raiderbot:depositMascot: after turn to wall");
-        //robotSensors.checkAngleAndCorrect();
-
-        //sleep(5000);
-
-        //move towards to wall
-        robotMotors.moveToPosition(POWER_FULL_FORWARD, GO_TO_WALL_DIST );
-        Log.d("Status" , "Raiderbot:depositMascot: after move to wall");
-        //robotSensors.checkAngleAndCorrect();
-
-        //turn towards the picture
-        robotMotors.turnAtAngle(POWER_FULL_FORWARD , TURN_TO_PICTURE_DIRECTION , TURN_TO_WALL_ANGLE);
-        Log.d("Status" , "Raiderbot:depositMascot: after turn to picture");
-        //robotSensors.checkAngleAndCorrect();
-
-        //move towards the picture
-        robotMotors.moveToPosition(POWER_FULL_FORWARD, GO_TO_PICTURE_DIST);
-        Log.d("Status" , "Raiderbot:depositMascot: after move to picture");
-        //robotSensors.checkAngleAndCorrect();
-        */
-
     }
 
     public void dropFromLander() throws InterruptedException {
@@ -108,11 +60,14 @@ public class Raiderbot {
 
     public void senseBallAndSample() throws InterruptedException {
 
-        robotMotors.moveStraightWithGyro(POWER_FULL_FORWARD, MOVE_FROM_LANDER_DIST, 0);
+        // move straight after dropping from lander. Prepares for sampling maneuvers.
+        robotMotors.moveStraightWithGyro(POWER_FULL_FORWARD, MOVE_FROM_LANDER_DIST);
         Log.d("Status" , "SCHSRaiderbot:senseBallAndSample: after move straight with gyro");
 
-        sleep(1000);
 
+        sleep(2000);
+
+        // Sense the gold cube. Record the angle of the mineral w/ respect to robot.
         robotTFlow.detectGoldMineral();
         Log.d("Status" , "SCHSRaiderbot:senseBallAndSample: after detect gold mineral");
         int turnToGoldAngle = robotTFlow.getMineralAngle();
@@ -120,6 +75,7 @@ public class Raiderbot {
 
         sleep(1000);
 
+        // Turn robot to face the gold mineral.
         int turnToGoldDirection = 0;
         int reverseAngle = -turnToGoldAngle;
         int reverseDirection = 0;
@@ -141,27 +97,23 @@ public class Raiderbot {
 
         sleep(1000);
 
+        // Find distance to the mineral in inches.
         int moveDist = robotTFlow.getMineralDist();
         Log.d("Status" , "SCHSRaiderbot:senseBallAndSample: moveDist" + moveDist);
 
-        robotMotors.moveStraightWithGyro(POWER_FULL_FORWARD, 48, 0);
+        // Move calculated distance to touch the gold mineral.
+        robotMotors.moveStraightWithGyro(POWER_FULL_FORWARD, moveDist);
         Log.d("Status", "SCHSRaiderbot: after move to mineral");
         //robotTFlow.detectGoldMineral();
         //Log.d("Status", "SCHSRaiderbot: after detectGoldMineral");
 
         sleep(1000);
-        /*
-        robotMotors.moveStraightWithGyro(POWER_FULL_FORWARD , -48, 0);
-        Log.d("Status" , "SCHSRaiderbot:senseBallAndSample: after move back to lander");
 
-        sleep(1000);
-
-        robotMotors.turnWithGyro(0.25, reverseAngle, reverseDirection);
-        Log.d("Status" , "SCHSRaiderbot:senseBallAndSample: reverseAngle" + reverseAngle);
-        Log.d("Status" , "SCHSRaiderbot:senseBallAndSample: reverseDirection" + reverseDirection);
-        */
+        // Move back to starting position
+        // Turn to face forward (return to initial angle).
     }
 
+    // Causes the current thread to wait a certain number of seconds. Used instead of given sleep function.
     public static void sleep(long sleepTime) {
 
         long wakeupTime = System.currentTimeMillis() + sleepTime;

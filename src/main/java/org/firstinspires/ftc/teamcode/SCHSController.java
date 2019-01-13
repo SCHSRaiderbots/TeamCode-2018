@@ -21,6 +21,7 @@ public class SCHSController extends LinearOpMode {
     private Raiderbot riley = null;
     private SCHSTimer botTimer = null;
     private SCHSLocation botLocation = null;
+    private boolean isInitialized = false;
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
@@ -33,17 +34,21 @@ public class SCHSController extends LinearOpMode {
         Log.d("Status" , "Controller:initialize: before riley initialized");
 
         riley.initialize(hardwareMap);
+        isInitialized = true;
+
     }
 
     public void cleanShutDown() {
         riley.cleanShutDown();
-
     }
 
     @Override
     public void runOpMode() throws InterruptedException {
 
-        initialize();
+        if (isInitialized != true) {
+            initialize();
+            Log.d("Status" , "SCHSController:runOpMode: inside initialized runopmode");
+        }
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();
@@ -52,17 +57,16 @@ public class SCHSController extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
-        Log.d("Status" , "Controller:runOpMode: program started");
+        Log.d("Status" , "SCHSController:runOpMode: program started");
 
         // run until the end of the match (driver presses STOP)
         //while (opModeIsActive()) {
 
-        Log.d("Status" , "Controller:opModeIsActive: before deposit mascot");
+        Log.d("Status" , "SCHSController:opModeIsActive: before deposit mascot");
 
-        riley.depositMascot();
-        //riley.senseBallAndSample();
+        //riley.depositMascot();
 
-        sleep(1000);
+        riley.senseBallAndSample();
 
         //cleanShutDown();
 
