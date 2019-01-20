@@ -185,4 +185,12 @@ public class SCHSObjectDetection {
         return inchDist;
     }
 
+    public VuforiaLocalizer getVuforia () {
+        return vuforia;
+    }
+
+    public VuforiaLocalizer.Parameters getParameters() {
+        return parameters;
+    }
+
 }

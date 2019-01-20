@@ -66,7 +66,9 @@ public class SCHSController extends LinearOpMode {
 
         //riley.depositMascot();
 
-        riley.senseBallAndSample();
+        //riley.senseBallAndSample();
+
+        riley.orientRobot();
 
         //cleanShutDown();
 

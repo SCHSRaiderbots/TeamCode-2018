@@ -43,8 +43,14 @@ public final class SCHSConstants {
     static final int FOCAL_LENGTH = 27; //mm
     static final int REAL_HEIGHT_GOLD = 50; //mm
     static final int IMG_HEIGHT = 2448; //pixels
-    static final int CAMERA_HEIGHT = 264; //mm
+    static final int CAMERA_HEIGHT = 264; //mm, previous value 35
     static final int SCAN_BALLS_TIME = 10000; // milliseconds
+
+    //Vuforia Picture Detection
+    static final int CAMERA_FORWARD_DISPLACEMENT  = 110;   // eg: Camera is 110 mm in front of robot center
+    static final int CAMERA_VERTICAL_DISPLACEMENT = 200;   // eg: Camera is 200 mm above ground
+    static final int CAMERA_LEFT_DISPLACEMENT     = 0;     // eg: Camera is ON the robot's center line
+    static final int SCAN_PICTURE_TIME = 10000; // milliseconds
 
     //core hex motor constants
     static final double CHMOTOR_COUNTS_PER_REVOLUTION = 288;

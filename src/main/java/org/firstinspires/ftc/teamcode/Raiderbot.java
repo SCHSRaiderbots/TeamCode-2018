@@ -13,19 +13,23 @@ public class Raiderbot {
     private SCHSMotor robotMotors;
     private SCHSSensor robotSensors;
     private SCHSObjectDetection robotTFlow;
+    private SCHSPicVuforia robotVuforia;
 
     public void initialize(HardwareMap hardwareMap) {
         minArm = new SCHSArm();
         landerArm = new SCHSArm();
 
-        robotSensors = new SCHSSensor();
-        robotSensors.initialize(hardwareMap);
+        //robotSensors = new SCHSSensor();
+        //robotSensors.initialize(hardwareMap);
 
         robotMotors = new SCHSMotor();
         robotMotors.initialize(hardwareMap);
 
         robotTFlow = new SCHSObjectDetection();
         robotTFlow.initialize(hardwareMap);
+
+        robotVuforia = new SCHSPicVuforia();
+        robotVuforia.initialize(hardwareMap, robotTFlow.getVuforia(), robotTFlow.getParameters());
 
         Log.d("Status" , " Raiderbot:initialize:after robotMotors initialized");
     }
@@ -45,6 +49,9 @@ public class Raiderbot {
 
     public void orientRobot() {
 
+        //scan for picture
+        robotVuforia.trackPictures();
+        Log.d("Status" , "SCHSRaiderbot:orientRobot: after trackPictures");
     }
 
     public void depositMascot() throws InterruptedException {
@@ -102,7 +109,7 @@ public class Raiderbot {
         Log.d("Status" , "SCHSRaiderbot:senseBallAndSample: moveDist" + moveDist);
 
         // Move calculated distance to touch the gold mineral.
-        robotMotors.moveStraightWithGyro(POWER_FULL_FORWARD, moveDist);
+        robotMotors.moveStraightWithGyro(POWER_FULL_FORWARD, 60);
         Log.d("Status", "SCHSRaiderbot: after move to mineral");
         //robotTFlow.detectGoldMineral();
         //Log.d("Status", "SCHSRaiderbot: after detectGoldMineral");

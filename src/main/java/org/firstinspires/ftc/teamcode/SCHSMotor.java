@@ -226,6 +226,7 @@ public class SCHSMotor extends SCHSController {
         double  leftSpeed = 0;
         double  rightSpeed = 0;
         double countsPerInch = 0;
+        double slowFactor = 0;
 
         Log.d("Status" , "SCHSMotor:gyroDrive: initial left position " + motorLeft.getCurrentPosition());
         Log.d("Status" , "SCHSMotor:gyroDrive: initial right position " + motorRight.getCurrentPosition());
@@ -236,6 +237,11 @@ public class SCHSMotor extends SCHSController {
         int encoderValue = (int) (countsPerInch * distance);
 
         Log.d("Status" , "SCHSMotor:gyroDrive: encoder value " + encoderValue);
+
+        double temp = countsPerInch * distance;
+
+        slowFactor = (temp + 309)/1550;
+        Log.d("Status" , "SCHSMotor:gyroDrive: slowFactor " + slowFactor);
 
         // Determine new target position, and pass to motor controller
         newLeftTarget = motorLeft.getCurrentPosition() + encoderValue;
@@ -291,12 +297,14 @@ public class SCHSMotor extends SCHSController {
             int distanceMovedLeft = motorLeft.getCurrentPosition();
             int distanceMovedRight = motorRight.getCurrentPosition();
 
-            if (distanceMovedLeft >= 0.6 * newLeftTarget || distanceMovedRight >= 0.6 * newRightTarget) {
+            if (distanceMovedLeft >= slowFactor * newLeftTarget || distanceMovedRight >= slowFactor * newRightTarget) {
                 PCoeff = 0.75 * PCoeff;
+                Log.d("Status" , "SCHSMotor:gyroDrive: PCoeff modified slowfactor " + PCoeff);
             }
 
-            if (distanceMovedLeft >= 0.6 * newLeftTarget || distanceMovedRight >= 0.6 * newRightTarget) {
+            if (distanceMovedLeft >= slowFactor * newLeftTarget || distanceMovedRight >= slowFactor * newRightTarget) {
                 speed = 0.75 * speed;
+                Log.d("Status" , "SCHSMotor:gyroDrive: speed modified slowfactor " + speed);
             }
 
             // if reached the desired position, exit while loop. Helps to stop turning at end of motion.
