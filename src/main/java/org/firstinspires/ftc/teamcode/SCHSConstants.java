@@ -3,17 +3,20 @@ package org.firstinspires.ftc.teamcode;
 public final class SCHSConstants {
 
     // distance measurements for each movement in inches
-    static final int MOVE_FROM_LANDER_DIST = 24;
+    static final int MOVE_FROM_LANDER_DIST = 12;
     static final int GO_TO_WALL_DIST = 24;
-    static final int GO_TO_PICTURE_DIST = 36;
-    static final int GO_TO_DEPOT_DIST = 12;
+    static final int GO_TO_PICTURE_DIST = 12;
+    static final int GO_TO_DEPOT_DIST = 24;
     static final int GO_TO_CRATER_DIST = 12;
+    static final int MOVE_TO_BALL = 36;
 
     // angle measurements for each turn
     static final double TURN_TO_WALL_ANGLE = 180;
-    static final double TURN_TO_PICTURE_ANGLE = 90;
+    static final double TURN_TO_PICTURE_ANGLE = 45;
     static final double DEPOT_ZONE_TURN_ANGLE = 90;
     static final double CRATER_ZONE_TURN_ANGLE = 90;
+    static final double TURN_TO_DEPOT_ANGLE = 45;
+    static final double BALL_ANGLE_ERROR = 0.75;
 
     //left or right direction for each turn - int where 1 = left and 2 = right
     static final int TURN_TO_WALL_DIRECTION = 1;
@@ -51,6 +54,10 @@ public final class SCHSConstants {
     static final int CAMERA_VERTICAL_DISPLACEMENT = 200;   // eg: Camera is 200 mm above ground
     static final int CAMERA_LEFT_DISPLACEMENT     = 0;     // eg: Camera is ON the robot's center line
     static final int SCAN_PICTURE_TIME = 10000; // milliseconds
+    static final String ROVER_PIC = "Blue-Rover";
+    static final String CRATERS_PIC = "Front-Craters";
+    static final String FOOT_PIC = "Red-Footprint";
+    static final String SPACE_PIC = "Back-Space";
 
     //core hex motor constants
     static final double CHMOTOR_COUNTS_PER_REVOLUTION = 288;

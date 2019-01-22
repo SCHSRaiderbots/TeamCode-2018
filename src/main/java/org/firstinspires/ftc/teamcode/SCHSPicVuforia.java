@@ -57,8 +57,10 @@ public class SCHSPicVuforia {
 
     private OpenGLMatrix phoneLocationOnRobot;
 
+    private String pictureDetected;
+
     public void initialize(HardwareMap hardwareMap , VuforiaLocalizer vuforiaFromObjectDetection, VuforiaLocalizer.Parameters paramsFromObjectDetection) {
-        
+
         parametersPic = paramsFromObjectDetection;
 
         //  Instantiate the Vuforia engine
@@ -69,13 +71,13 @@ public class SCHSPicVuforia {
         // sets are stored in the 'assets' part of our application.
         targetsRoverRuckus = this.vuforiaPic.loadTrackablesFromAsset("RoverRuckus");
         blueRover = targetsRoverRuckus.get(0);
-        blueRover.setName("Blue-Rover");
+        blueRover.setName(ROVER_PIC);
         redFootprint = targetsRoverRuckus.get(1);
-        redFootprint.setName("Red-Footprint");
+        redFootprint.setName(FOOT_PIC);
         frontCraters = targetsRoverRuckus.get(2);
-        frontCraters.setName("Front-Craters");
+        frontCraters.setName(CRATERS_PIC);
         backSpace = targetsRoverRuckus.get(3);
-        backSpace.setName("Back-Space");
+        backSpace.setName(SPACE_PIC);
 
         // For convenience, gather together all the trackable objects in one easily-iterable collection */
         allTrackables = new ArrayList<VuforiaTrackable>();
@@ -153,6 +155,7 @@ public class SCHSPicVuforia {
             for (VuforiaTrackable trackable : allTrackables) {
                 if (((VuforiaTrackableDefaultListener) trackable.getListener()).isVisible()) {
                     Log.d("Status", "SCHSPicVuforia:Visible Target " + trackable.getName());
+                    pictureDetected = trackable.getName();
                     targetVisible = true;
 
                     // getUpdatedRobotLocation() will return null if no new information is available since
@@ -191,5 +194,9 @@ public class SCHSPicVuforia {
         CameraDevice.getInstance().setFlashTorchMode(false);
 
     }// end of trackPicture
+
+    public String getPictureDetected () {
+        return pictureDetected;
+    }
 
 } //end of class

@@ -64,11 +64,22 @@ public class SCHSController extends LinearOpMode {
 
         Log.d("Status" , "SCHSController:opModeIsActive: before deposit mascot");
 
+        //riley.dropFromLander();
+
+        //move towards balls by x inches (if necessary) - yes
+        //scan 3 balls, determine gold mineral - yes
+        //turn to gold - yes
+        //move to gold - yes
+        //return back - yes
+        //turn back to 0 - yes
+        riley.senseBallAndSample();
+
+        riley.scanPictures();
+
+        //testing move forward and backward - works
         //riley.depositMascot();
 
-        //riley.senseBallAndSample();
-
-        riley.orientRobot();
+        //riley.goToCrater();
 
         //cleanShutDown();
 
