@@ -25,6 +25,9 @@ public class SCHSObjectDetection {
     private int mineralAngle = 0;
     private int mineralDist = 0;
     private VuforiaLocalizer.Parameters parameters;
+    private boolean isGoldOnLeft = false;
+    private boolean isGoldOnRight = false;
+    private boolean isGoldOnCenter = false;
 
     public void initialize(HardwareMap hardwareMap) {
         tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
@@ -120,10 +123,13 @@ public class SCHSObjectDetection {
                         if (goldMineralX != -1 && silverMineral1X != -1 && silverMineral2X != -1) {
                             if (goldMineralX < silverMineral1X && goldMineralX < silverMineral2X) {
                                 Log.d("Status", "SCHSObjectDetection: Gold Mineral Position: Left");
+                                isGoldOnLeft = true;
                             } else if (goldMineralX > silverMineral1X && goldMineralX > silverMineral2X) {
                                 Log.d("Status", "SCHSObjectDetection: Gold Mineral Position: Right");
+                                isGoldOnRight = true;
                             } else {
                                 Log.d("Status", "SCHSObjectDetection: Gold Mineral Position: Center");
+                                isGoldOnCenter = true;
                             }
                         }
 
@@ -149,6 +155,18 @@ public class SCHSObjectDetection {
 
     public int getMineralDist() {
         return mineralDist;
+    }
+
+    public boolean getIsGoldOnLeft() {
+        return isGoldOnLeft;
+    }
+
+    public boolean getIsGoldOnRight() {
+        return isGoldOnRight;
+    }
+
+    public boolean getIsGoldOnCenter() {
+        return isGoldOnCenter;
     }
 
     public void initVuforia() {

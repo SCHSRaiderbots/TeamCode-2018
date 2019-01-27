@@ -9,6 +9,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.ServoController;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -24,11 +26,14 @@ public class SCHSMotor extends SCHSController {
     private DcMotor motorRight = null;
     private BNO055IMU.Parameters gyroParameters;
     private BNO055IMU imu;
-
+    private Servo mascotServo = null;
 
     public void initialize(HardwareMap hardwareMap) {
         motorLeft = hardwareMap.get(DcMotor.class, "leftMotor");
         motorRight = hardwareMap.get(DcMotor.class, "rightMotor");
+
+        mascotServo = hardwareMap.get(Servo.class, "mascotServo");
+
         motorLeft.setDirection(Direction.REVERSE);
         motorRight.setDirection(Direction.FORWARD);
 
@@ -485,6 +490,36 @@ public class SCHSMotor extends SCHSController {
 
         motorLeft.setPower(0);
         motorRight.setPower(0);
+
+    }
+
+    public void moveServo(double position, int servoDirection) {
+        if (servoDirection == SERVO_DIRECTION_LEFT){
+            mascotServo.setDirection(Servo.Direction.REVERSE);
+            Log.d("Status", "SCHSMotor:moveServo: set direction to reverse");
+        } else {
+            mascotServo.setDirection(Servo.Direction.FORWARD);
+            Log.d("Status", "SCHSMotor:moveServo: set direction to forward");
+        }
+
+        double maxPosition = position;
+        double currPosition = mascotServo.getPosition();
+        Log.d("Status", "SCHSMotor:moveServo: currPosition" + currPosition);
+
+        while (currPosition >= maxPosition) {
+            Log.d("Status", "SCHSMotor:moveServo: entered while");
+            maxPosition += INCREMENT;
+            mascotServo.setPosition(maxPosition);
+            Log.d("Status", "SCHSMotor:moveServo: max position" + maxPosition);
+            sleep(CYCLE_MS);
+            currPosition = mascotServo.getPosition();
+            Log.d("Status", "SCHSMotor:moveServo: currPosition in loop" + currPosition);
+
+            if (currPosition >= position){
+                Log.d("Status", "SCHSMotor:moveServo: break");
+                break;
+            }
+        }
 
     }
 

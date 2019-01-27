@@ -1,30 +1,46 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.hardware.Servo;
+
 public final class SCHSConstants {
 
     // distance measurements for each movement in inches
-    static final int MOVE_FROM_LANDER_DIST = 12;
+    static final int MOVE_FROM_LANDER_DIST = 0;
     static final int GO_TO_WALL_DIST = 24;
-    static final int GO_TO_PICTURE_DIST = 12;
-    static final int GO_TO_DEPOT_DIST = 24;
-    static final int GO_TO_CRATER_DIST = 12;
-    static final int MOVE_TO_BALL = 36;
+    static final int GO_TO_PICTURE_DIST = 30;
+    static final int GO_TO_DEPOT_DIST = 48;
+    static final int GO_TO_CRATER_DIST = -72;
+    static final int MOVE_TO_BALL = 28;
+    static final int MOVE_BACK_FROM_BALL = -16;
+    static final int GO_TO_PICTURE_LEFT_DIST = 30;
+    static final int GO_TO_PICTURE_RIGHT_DIST = 30;
+    static final int GO_TO_PICTURE_CENTER_DIST = 30;
 
     // angle measurements for each turn
     static final double TURN_TO_WALL_ANGLE = 180;
-    static final double TURN_TO_PICTURE_ANGLE = 45;
+    static final double TURN_TO_PICTURE_ANGLE = 50;
     static final double DEPOT_ZONE_TURN_ANGLE = 90;
     static final double CRATER_ZONE_TURN_ANGLE = 90;
-    static final double TURN_TO_DEPOT_ANGLE = 45;
+    static final double TURN_TO_DEPOT_ANGLE = 55;
     static final double BALL_ANGLE_ERROR = 0.75;
+    static final double TURN_TO_PICTURE_LEFT_ANGLE = 22;
+    static final double TURN_TO_PICTURE_RIGHT_ANGLE = 84;
+    static final double TURN_TO_PICTURE_CENTER_ANGLE = 58;
+    static final double TURN_MASCOT_SERVO_ANGLE = 0.5; //from 0 to 1, where 1 is 180 degrees
 
     //left or right direction for each turn - int where 1 = left and 2 = right
     static final int TURN_TO_WALL_DIRECTION = 1;
-    static final int TURN_TO_PICTURE_DIRECTION = 2;
+    static final int TURN_TO_PICTURE_DIRECTION = 1;
     static final int DEPOT_ZONE_TURN_DIRECTION = 2;
     static final int CRATER_ZONE_TURN_DIRECTION = 1;
     static final int LEFT_TURN = 1;
     static final int RIGHT_TURN = 2;
+
+    //servo constants - direction, increment
+    static final int SERVO_DIRECTION_LEFT = 1;
+    static final int SERVO_DIRECTION_RIGHT = 2;
+    static final double INCREMENT   = 0.01;
+    static final int    CYCLE_MS    =   50;
 
     // color values as that the color sensor would detect from each picture - may be changed to red/green/blue/alpha values
     static final int PIC_CRATERS = 5;

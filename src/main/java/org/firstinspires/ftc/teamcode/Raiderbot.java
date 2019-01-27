@@ -43,19 +43,41 @@ public class Raiderbot {
     public void goToCrater() {
 
         //to be corrected
-        //Log.d("Status" , "Raiderbot:goToCrater: inside go to crater");
-        //robotMotors.moveToPosition(POWER_FULL_FORWARD, MOVE_FROM_LANDER_DIST);
+        Log.d("Status" , "Raiderbot:goToCrater: inside go to crater");
+        robotMotors.moveStraightWithGyro(POWER_FULL_FORWARD, GO_TO_CRATER_DIST);
+    }
+
+    //turn servo to drop mascot
+    public void depositMascot() {
+        Log.d("Status" , "SCHSRaiderbot:depositMascot: inside deposit mascot");
+        robotMotors.moveServo( TURN_MASCOT_SERVO_ANGLE, SERVO_DIRECTION_LEFT);
+        Log.d("Status" , "SCHSRaiderbot:depositMascot: after move servo");
     }
 
     public void scanPictures() {
+        boolean goldOnLeft = robotTFlow.getIsGoldOnLeft();
+        boolean goldOnRight = robotTFlow.getIsGoldOnRight();
+        boolean goldOnCenter = robotTFlow.getIsGoldOnCenter();
 
         //turn to face the wall picture
-        robotMotors.turnWithGyro(0.25, TURN_TO_PICTURE_ANGLE, TURN_TO_PICTURE_DIRECTION);
-        Log.d("Status" , "SCHSRaiderbot:scanPictures: after turn to picture");
+        if (goldOnLeft == true){
+            robotMotors.turnWithGyro(0.25, TURN_TO_PICTURE_LEFT_ANGLE, TURN_TO_PICTURE_DIRECTION);
+            Log.d("Status" , "SCHSRaiderbot:scanPictures: gold on left turn to picture");
+            robotMotors.moveStraightWithGyro(POWER_FULL_FORWARD, GO_TO_PICTURE_LEFT_DIST);
+            Log.d("Status" , "SCHSRaiderbot:scanPictures: gold on left after move to picture");
+        } else if (goldOnRight == true){
+            robotMotors.turnWithGyro(0.25, TURN_TO_PICTURE_RIGHT_ANGLE, TURN_TO_PICTURE_DIRECTION);
+            Log.d("Status" , "SCHSRaiderbot:scanPictures: gold on right turn to picture");
+            robotMotors.moveStraightWithGyro(POWER_FULL_FORWARD, GO_TO_PICTURE_RIGHT_DIST);
+            Log.d("Status" , "SCHSRaiderbot:scanPictures: gold on right after move to picture");
+        } else if (goldOnCenter == true){
+            robotMotors.turnWithGyro(0.25, TURN_TO_PICTURE_CENTER_ANGLE, TURN_TO_PICTURE_DIRECTION);
+            Log.d("Status" , "SCHSRaiderbot:scanPictures: gold on center turn to picture");
+            robotMotors.moveStraightWithGyro(POWER_FULL_FORWARD, GO_TO_PICTURE_CENTER_DIST);
+            Log.d("Status" , "SCHSRaiderbot:scanPictures: gold on center after move to picture");
+        }
 
-        //go to picture to scan
-        robotMotors.moveStraightWithGyro(POWER_FULL_FORWARD, GO_TO_PICTURE_DIST);
-        Log.d("Status" , "SCHSRaiderbot:scanPictures: after move to picture");
+        Log.d("Status" , "SCHSRaiderbot:scanPictures: after turn to picture");
 
         //scan for picture
         robotVuforia.trackPictures();
@@ -80,7 +102,7 @@ public class Raiderbot {
         }
     }
 
-    public void depositMascot() throws InterruptedException {
+    public void testFunction() throws InterruptedException {
         robotMotors.turnWithGyro(0.25, 45, RIGHT_TURN);
         Log.d("Status ", "SCHSRaiderbot:depositMascot: after turn 20 degrees left");
 
@@ -171,7 +193,7 @@ public class Raiderbot {
 
         sleep(1000);
 
-        robotMotors.moveStraightWithGyro(POWER_FULL_FORWARD, -MOVE_TO_BALL);
+        robotMotors.moveStraightWithGyro(POWER_FULL_FORWARD, MOVE_BACK_FROM_BALL);
         Log.d("Status", "SCHSRaiderbot: after move back from mineral");
 
         robotMotors.turnWithGyro(0.25, reverseAngle, reverseDirection);

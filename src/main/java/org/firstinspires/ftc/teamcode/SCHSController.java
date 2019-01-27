@@ -76,10 +76,16 @@ public class SCHSController extends LinearOpMode {
 
         riley.scanPictures();
 
-        //testing move forward and backward - works
-        //riley.depositMascot();
+        sleep(2000);
 
-        //riley.goToCrater();
+        //testing move forward and backward - works
+        //riley.testFunction();
+        riley.depositMascot();
+        Log.d("Status" , "SCHSController:opModeIsActive: after deposit mascot");
+
+        sleep(2000);
+
+        riley.goToCrater();
 
         //cleanShutDown();
 
