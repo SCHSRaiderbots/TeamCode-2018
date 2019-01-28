@@ -16,6 +16,11 @@ public final class SCHSConstants {
     static final int GO_TO_PICTURE_RIGHT_DIST = 30;
     static final int GO_TO_PICTURE_CENTER_DIST = 30;
 
+    //measurements and values for dropping from lander
+    static final int DROP_FROM_LANDER_DIST = 100; //encoder value for now, other unit tbd
+    static final int ARM_MOVE_UP_DIRECTION = 1;
+    static final int ARM_MOVE_DOWN_DIRECTION = 2;
+
     // angle measurements for each turn
     static final double TURN_TO_WALL_ANGLE = 180;
     static final double TURN_TO_PICTURE_ANGLE = 50;

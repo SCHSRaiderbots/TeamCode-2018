@@ -137,7 +137,9 @@ public class Raiderbot {
     }
 
     public void dropFromLander() throws InterruptedException {
-
+        Log.d("Status" , "SCHSRaiderbot:dropFromLander: inside drop from lander");
+        robotMotors.moveLanderArm(POWER_HALF_FORWARD, DROP_FROM_LANDER_DIST, ARM_MOVE_DOWN_DIRECTION);
+        Log.d("Status" , "SCHSRaiderbot:dropFromLander: after move arm");
     }
 
     public void senseBallAndSample() throws InterruptedException {

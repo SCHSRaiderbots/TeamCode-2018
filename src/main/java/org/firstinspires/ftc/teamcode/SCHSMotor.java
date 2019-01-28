@@ -24,6 +24,7 @@ public class SCHSMotor extends SCHSController {
 
     private DcMotor motorLeft = null;
     private DcMotor motorRight = null;
+    private DcMotor motorArm = null;
     private BNO055IMU.Parameters gyroParameters;
     private BNO055IMU imu;
     private Servo mascotServo = null;
@@ -31,6 +32,7 @@ public class SCHSMotor extends SCHSController {
     public void initialize(HardwareMap hardwareMap) {
         motorLeft = hardwareMap.get(DcMotor.class, "leftMotor");
         motorRight = hardwareMap.get(DcMotor.class, "rightMotor");
+        motorArm = hardwareMap.get(DcMotor.class, "landerArmMotor");
 
         mascotServo = hardwareMap.get(Servo.class, "mascotServo");
 
@@ -520,6 +522,51 @@ public class SCHSMotor extends SCHSController {
                 break;
             }
         }
+
+    }
+
+    public void moveLanderArm(double powerStart, int distance, int direction) {
+        Log.d("Status" , "SCHSMotor:moveFromLander: inside moveLanderArm");
+
+        int moveArmDist = 0;
+
+        motorArm.setMode(RunMode.STOP_AND_RESET_ENCODER);
+        while (motorArm.getCurrentPosition() != 0) { //Ensures encoders are zero
+            motorArm.setMode(RunMode.STOP_AND_RESET_ENCODER);
+            //waitOneFullHardwareCycle(); //Needed within all loops
+        }
+
+        motorArm.setMode(RunMode.RUN_TO_POSITION);
+
+        if (direction == ARM_MOVE_UP_DIRECTION){
+            moveArmDist = distance;
+
+            motorArm.setTargetPosition(moveArmDist);
+
+            while (motorArm.getCurrentPosition() <= moveArmDist) {
+                motorArm.setPower(powerStart);
+                Log.d("Status" , "SCHSMotor:moveFromLander: powerStart" + powerStart);
+
+                if (motorArm.getCurrentPosition() >= 0.75 * moveArmDist) {
+                    powerStart = 0.75 * powerStart;
+                }
+            }
+        } else {
+            moveArmDist = -distance;
+            motorArm.setTargetPosition(moveArmDist);
+
+            while (motorArm.getCurrentPosition() >= moveArmDist) {
+                motorArm.setPower(powerStart);
+                Log.d("Status" , "SCHSMotor:moveFromLander: powerStart" + powerStart);
+
+                if (motorArm.getCurrentPosition() <= 0.75 * moveArmDist) {
+                    powerStart = 0.75 * powerStart;
+                }
+            }
+        }
+        
+
+        motorArm.setPower(0);
 
     }
 
