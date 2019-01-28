@@ -25,9 +25,9 @@ public class SCHSObjectDetection {
     private int mineralAngle = 0;
     private int mineralDist = 0;
     private VuforiaLocalizer.Parameters parameters;
-    private boolean isGoldOnLeft = false;
-    private boolean isGoldOnRight = false;
-    private boolean isGoldOnCenter = false;
+    private boolean isGoldOnLeft;
+    private boolean isGoldOnRight;
+    private boolean isGoldOnCenter;
 
     public void initialize(HardwareMap hardwareMap) {
         tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(

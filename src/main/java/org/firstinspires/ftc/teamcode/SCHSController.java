@@ -62,9 +62,9 @@ public class SCHSController extends LinearOpMode {
         // run until the end of the match (driver presses STOP)
         //while (opModeIsActive()) {
 
-        Log.d("Status" , "SCHSController:opModeIsActive: before deposit mascot");
+        Log.d("Status" , "SCHSController:opModeIsActive: before senseBallAndSample");
 
-        riley.dropFromLander();
+        //riley.dropFromLander();
 
         //move towards balls by x inches (if necessary) - yes
         //scan 3 balls, determine gold mineral - yes
@@ -73,8 +73,10 @@ public class SCHSController extends LinearOpMode {
         //return back - yes
         //turn back to 0 - yes
         riley.senseBallAndSample();
+        Log.d("Status" , "SCHSController:opModeIsActive: after sense ball and sample");
 
         riley.scanPictures();
+        Log.d("Status" , "SCHSController:opModeIsActive: after scanPictures");
 
         sleep(2000);
 
@@ -86,6 +88,7 @@ public class SCHSController extends LinearOpMode {
         sleep(2000);
 
         riley.goToCrater();
+        Log.d("Status" , "SCHSController:opModeIsActive: after goToCrater");
 
         //cleanShutDown();
 

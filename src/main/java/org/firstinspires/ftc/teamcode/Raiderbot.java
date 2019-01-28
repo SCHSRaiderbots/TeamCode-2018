@@ -31,7 +31,7 @@ public class Raiderbot {
         robotVuforia = new SCHSPicVuforia();
         robotVuforia.initialize(hardwareMap, robotTFlow.getVuforia(), robotTFlow.getParameters());
 
-        Log.d("Status" , " Raiderbot:initialize:after robotMotors initialized");
+        Log.d("Status" , " Raiderbot:initialize:after robotMotors, robotTFlow, robotVuforia initialized");
     }
 
     public void cleanShutDown() {
@@ -45,6 +45,7 @@ public class Raiderbot {
         //to be corrected
         Log.d("Status" , "Raiderbot:goToCrater: inside go to crater");
         robotMotors.moveStraightWithGyro(POWER_FULL_FORWARD, GO_TO_CRATER_DIST);
+        Log.d("Status" , "Raiderbot:goToCrater: after move to crater");
     }
 
     //turn servo to drop mascot
@@ -58,6 +59,10 @@ public class Raiderbot {
         boolean goldOnLeft = robotTFlow.getIsGoldOnLeft();
         boolean goldOnRight = robotTFlow.getIsGoldOnRight();
         boolean goldOnCenter = robotTFlow.getIsGoldOnCenter();
+
+        Log.d("Status" , "SCHSRaiderbot:scanPictures: goldOnLeft = " + goldOnLeft);
+        Log.d("Status" , "SCHSRaiderbot:scanPictures: goldOnRight = " + goldOnRight);
+        Log.d("Status" , "SCHSRaiderbot:scanPictures: goldOnCenter = " + goldOnCenter);
 
         //turn to face the wall picture
         if (goldOnLeft == true){
@@ -155,8 +160,7 @@ public class Raiderbot {
 
         // move straight after dropping from lander. Prepares for sampling maneuvers.
         robotMotors.moveStraightWithGyro(POWER_FULL_FORWARD, MOVE_FROM_LANDER_DIST);
-        Log.d("Status" , "SCHSRaiderbot:senseBallAndSample: after move straight with gyro");
-
+        Log.d("Status" , "SCHSRaiderbot:senseBallAndSample: after move from lander");
 
         sleep(2000);
 
@@ -199,8 +203,6 @@ public class Raiderbot {
         // Move calculated distance to touch the gold mineral.
         robotMotors.moveStraightWithGyro(POWER_FULL_FORWARD, MOVE_TO_BALL);
         Log.d("Status", "SCHSRaiderbot: after move to mineral");
-        //robotTFlow.detectGoldMineral();
-        //Log.d("Status", "SCHSRaiderbot: after detectGoldMineral");
 
         sleep(1000);
 
