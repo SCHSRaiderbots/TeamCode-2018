@@ -538,7 +538,7 @@ public class SCHSMotor extends SCHSController {
 
         motorArm.setMode(RunMode.RUN_TO_POSITION);
 
-        if (direction == ARM_MOVE_UP_DIRECTION){
+        if (direction == ARM_MOVE_DOWN_DIRECTION){
             moveArmDist = distance;
 
             motorArm.setTargetPosition(moveArmDist);
@@ -547,8 +547,13 @@ public class SCHSMotor extends SCHSController {
                 motorArm.setPower(powerStart);
                 Log.d("Status" , "SCHSMotor:moveFromLander: powerStart" + powerStart);
 
-                if (motorArm.getCurrentPosition() >= 0.75 * moveArmDist) {
-                    powerStart = 0.75 * powerStart;
+                /*if (motorArm.getCurrentPosition() >= 0.9 * moveArmDist) {
+                    powerStart = 0.8 * powerStart;
+                }*/
+
+                if (motorArm.getCurrentPosition() >= moveArmDist) {
+                    Log.d("Status" , "SCHSMotor:moveFromLander: break");
+                    break;
                 }
             }
         } else {
@@ -559,12 +564,16 @@ public class SCHSMotor extends SCHSController {
                 motorArm.setPower(powerStart);
                 Log.d("Status" , "SCHSMotor:moveFromLander: powerStart" + powerStart);
 
-                if (motorArm.getCurrentPosition() <= 0.75 * moveArmDist) {
-                    powerStart = 0.75 * powerStart;
+                /*if (motorArm.getCurrentPosition() <= 0.9 * moveArmDist) {
+                    powerStart = 0.8 * powerStart;
+                }*/
+
+                if (motorArm.getCurrentPosition() <= moveArmDist) {
+                    Log.d("Status" , "SCHSMotor:moveFromLander: break");
+                    break;
                 }
             }
         }
-        
 
         motorArm.setPower(0);
 

@@ -75,6 +75,11 @@ public class Raiderbot {
             Log.d("Status" , "SCHSRaiderbot:scanPictures: gold on center turn to picture");
             robotMotors.moveStraightWithGyro(POWER_FULL_FORWARD, GO_TO_PICTURE_CENTER_DIST);
             Log.d("Status" , "SCHSRaiderbot:scanPictures: gold on center after move to picture");
+        } else {
+            robotMotors.turnWithGyro(0.25, TURN_TO_PICTURE_CENTER_ANGLE, TURN_TO_PICTURE_DIRECTION);
+            Log.d("Status" , "SCHSRaiderbot:scanPictures: no gold detected turn to picture");
+            robotMotors.moveStraightWithGyro(POWER_FULL_FORWARD, GO_TO_PICTURE_CENTER_DIST);
+            Log.d("Status" , "SCHSRaiderbot:scanPictures: no gold detected after move to picture");
         }
 
         Log.d("Status" , "SCHSRaiderbot:scanPictures: after turn to picture");
@@ -99,6 +104,10 @@ public class Raiderbot {
 
         } else {
             Log.d("Status ", "SCHSRaiderbot:scanPictures: No picture detected");
+            robotMotors.turnWithGyro(0.25, TURN_TO_DEPOT_ANGLE, LEFT_TURN);
+            Log.d("Status ", "SCHSRaiderbot:scanPictures: no pic detected left turn");
+            robotMotors.moveStraightWithGyro(POWER_FULL_FORWARD, GO_TO_DEPOT_DIST);
+            Log.d("Status ", "SCHSRaiderbot:scanPictures: after move to depot");
         }
     }
 
@@ -138,7 +147,7 @@ public class Raiderbot {
 
     public void dropFromLander() throws InterruptedException {
         Log.d("Status" , "SCHSRaiderbot:dropFromLander: inside drop from lander");
-        robotMotors.moveLanderArm(POWER_HALF_FORWARD, DROP_FROM_LANDER_DIST, ARM_MOVE_DOWN_DIRECTION);
+        robotMotors.moveLanderArm(POWER_FULL_FORWARD, DROP_FROM_LANDER_DIST, ARM_MOVE_DOWN_DIRECTION);
         Log.d("Status" , "SCHSRaiderbot:dropFromLander: after move arm");
     }
 

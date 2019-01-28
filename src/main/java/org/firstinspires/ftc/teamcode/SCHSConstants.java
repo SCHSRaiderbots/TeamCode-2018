@@ -17,7 +17,7 @@ public final class SCHSConstants {
     static final int GO_TO_PICTURE_CENTER_DIST = 30;
 
     //measurements and values for dropping from lander
-    static final int DROP_FROM_LANDER_DIST = 100; //encoder value for now, other unit tbd
+    static final int DROP_FROM_LANDER_DIST = 67000; //encoder value for now, other unit tbd
     static final int ARM_MOVE_UP_DIRECTION = 1;
     static final int ARM_MOVE_DOWN_DIRECTION = 2;
 
