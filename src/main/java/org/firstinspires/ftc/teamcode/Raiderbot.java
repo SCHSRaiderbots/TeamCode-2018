@@ -159,7 +159,7 @@ public class Raiderbot {
     public void senseBallAndSample() throws InterruptedException {
 
         // move straight after dropping from lander. Prepares for sampling maneuvers.
-        robotMotors.moveStraightWithGyro(POWER_FULL_FORWARD, MOVE_FROM_LANDER_DIST);
+        robotMotors.moveStraightWithGyro(POWER_HALF_FORWARD, MOVE_FROM_LANDER_DIST); //perviously speed was 0.2
         Log.d("Status" , "SCHSRaiderbot:senseBallAndSample: after move from lander");
 
         sleep(2000);
@@ -174,20 +174,34 @@ public class Raiderbot {
 
         // Turn robot to face the gold mineral.
         int turnToGoldDirection = 0;
-        double reverseAngle = -turnToGoldAngle;
+        double reverseAngle = Math.abs(turnToGoldAngle);
         int reverseDirection = 0;
-        if (turnToGoldAngle < 0) {
+        if (turnToGoldAngle < -10) {
             turnToGoldDirection = LEFT_TURN;
             Log.d("Status" , "SCHSRaiderbot:senseBallAndSample: left turn");
-            robotMotors.turnWithGyro(0.25 , turnToGoldAngle, turnToGoldDirection);
+            robotMotors.turnWithGyro(0.25 , turnToGoldAngle - CAMERA_ANGLE_ERROR, turnToGoldDirection);
             Log.d("Status" , "SCHSRaiderbot:senseBallAndSample: after turn");
             reverseDirection = RIGHT_TURN;
-        } else if (turnToGoldAngle > 0){
+        } else if (turnToGoldAngle > 10){
             turnToGoldDirection = RIGHT_TURN;
             Log.d("Status" , "SCHSRaiderbot:senseBallAndSample: right turn");
-            robotMotors.turnWithGyro(0.25 , turnToGoldAngle, turnToGoldDirection);
+            robotMotors.turnWithGyro(0.25 , turnToGoldAngle + CAMERA_ANGLE_ERROR, turnToGoldDirection);
             Log.d("Status" , "SCHSRaiderbot:senseBallAndSample: after turn");
             reverseDirection = LEFT_TURN;
+        } else if (turnToGoldAngle > -10 && turnToGoldAngle <0) {
+            turnToGoldDirection = LEFT_TURN;
+            Log.d("Status" , "SCHSRaiderbot:senseBallAndSample: left turn");
+            robotMotors.turnWithGyro(0.25 , turnToGoldAngle + CAMERA_ANGLE_SMALL_ERROR, turnToGoldDirection);
+            Log.d("Status" , "SCHSRaiderbot:senseBallAndSample: after turn");
+            reverseDirection = RIGHT_TURN;
+            reverseAngle = turnToGoldAngle - CAMERA_ANGLE_SMALL_ERROR;
+        } else if (turnToGoldAngle < 10 && turnToGoldAngle > 0) {
+            turnToGoldDirection = RIGHT_TURN;
+            Log.d("Status" , "SCHSRaiderbot:senseBallAndSample: right turn");
+            robotMotors.turnWithGyro(0.25 , turnToGoldAngle - CAMERA_ANGLE_SMALL_ERROR, turnToGoldDirection);
+            Log.d("Status" , "SCHSRaiderbot:senseBallAndSample: after turn");
+            reverseDirection = LEFT_TURN;
+            reverseAngle = turnToGoldAngle - CAMERA_ANGLE_SMALL_ERROR;
         } else {
             Log.d("Status" , "SCHSRaiderbot:senseBallAndSample: no turn");
         }
@@ -209,7 +223,7 @@ public class Raiderbot {
         robotMotors.moveStraightWithGyro(POWER_FULL_FORWARD, MOVE_BACK_FROM_BALL);
         Log.d("Status", "SCHSRaiderbot: after move back from mineral");
 
-        robotMotors.turnWithGyro(0.25, reverseAngle, reverseDirection);
+        robotMotors.turnWithGyro(0.25, reverseAngle + CAMERA_ANGLE_ERROR, reverseDirection);
         Log.d("Status", "SCHSRaiderbot: after turn back");
 
         // Move back to starting position

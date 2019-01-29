@@ -72,7 +72,8 @@ public class SCHSObjectDetection {
                 if (updatedRecognitions != null) {
                     Log.d("Status", "SCHSObjectDetection: # Object Detected " + updatedRecognitions.size());
 
-                    if (updatedRecognitions.size() == 3) {
+                    //if (updatedRecognitions.size() == 3) {
+                    if (updatedRecognitions.size() >= 1 && updatedRecognitions.size() <= 3) {
                         int goldMineralX = -1;
                         int silverMineral1X = -1;
                         int silverMineral2X = -1;

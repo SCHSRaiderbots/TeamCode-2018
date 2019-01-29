@@ -5,16 +5,16 @@ import com.qualcomm.robotcore.hardware.Servo;
 public final class SCHSConstants {
 
     // distance measurements for each movement in inches
-    static final int MOVE_FROM_LANDER_DIST = 0;
+    static final int MOVE_FROM_LANDER_DIST = 2;
     static final int GO_TO_WALL_DIST = 24;
     static final int GO_TO_PICTURE_DIST = 30;
     static final int GO_TO_DEPOT_DIST = 48;
     static final int GO_TO_CRATER_DIST = -72;
-    static final int MOVE_TO_BALL = 28;
-    static final int MOVE_BACK_FROM_BALL = -16;
+    static final int MOVE_TO_BALL = 18;
+    static final int MOVE_BACK_FROM_BALL = -7;
     static final int GO_TO_PICTURE_LEFT_DIST = 30;
-    static final int GO_TO_PICTURE_RIGHT_DIST = 30;
-    static final int GO_TO_PICTURE_CENTER_DIST = 30;
+    static final int GO_TO_PICTURE_RIGHT_DIST = 38;
+    static final int GO_TO_PICTURE_CENTER_DIST = 36;
 
     //measurements and values for dropping from lander
     static final int DROP_FROM_LANDER_DIST = 67000; //encoder value for now, other unit tbd
@@ -28,10 +28,12 @@ public final class SCHSConstants {
     static final double CRATER_ZONE_TURN_ANGLE = 90;
     static final double TURN_TO_DEPOT_ANGLE = 55;
     static final double BALL_ANGLE_ERROR = 0.75;
-    static final double TURN_TO_PICTURE_LEFT_ANGLE = 22;
-    static final double TURN_TO_PICTURE_RIGHT_ANGLE = 84;
-    static final double TURN_TO_PICTURE_CENTER_ANGLE = 58;
+    static final double TURN_TO_PICTURE_LEFT_ANGLE = 65;
+    static final double TURN_TO_PICTURE_RIGHT_ANGLE = 60;
+    static final double TURN_TO_PICTURE_CENTER_ANGLE = 60;
     static final double TURN_MASCOT_SERVO_ANGLE = 0.5; //from 0 to 1, where 1 is 180 degrees
+    static final int CAMERA_ANGLE_ERROR = 10;
+    static final int CAMERA_ANGLE_SMALL_ERROR = 5;
 
     //left or right direction for each turn - int where 1 = left and 2 = right
     static final int TURN_TO_WALL_DIRECTION = 1;
