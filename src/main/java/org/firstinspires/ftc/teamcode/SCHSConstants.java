@@ -16,8 +16,9 @@ public final class SCHSConstants {
     static final int GO_TO_PICTURE_RIGHT_DIST = 38;
     static final int GO_TO_PICTURE_CENTER_DIST = 36;
 
+
     //measurements and values for dropping from lander
-    static final int DROP_FROM_LANDER_DIST = 67000; //encoder value for now, other unit tbd
+    static final int DROP_FROM_LANDER_DIST = 8200; //encoder value for now, other unit tbd
     static final int ARM_MOVE_UP_DIRECTION = 1;
     static final int ARM_MOVE_DOWN_DIRECTION = 2;
 
@@ -30,7 +31,7 @@ public final class SCHSConstants {
     static final double BALL_ANGLE_ERROR = 0.75;
     static final double TURN_TO_PICTURE_LEFT_ANGLE = 65;
     static final double TURN_TO_PICTURE_RIGHT_ANGLE = 60;
-    static final double TURN_TO_PICTURE_CENTER_ANGLE = 60;
+    static final double TURN_TO_PICTURE_CENTER_ANGLE = 55;
     static final double TURN_MASCOT_SERVO_ANGLE = 0.5; //from 0 to 1, where 1 is 180 degrees
     static final int CAMERA_ANGLE_ERROR = 10;
     static final int CAMERA_ANGLE_SMALL_ERROR = 5;

@@ -64,7 +64,7 @@ public class SCHSController extends LinearOpMode {
 
         Log.d("Status" , "SCHSController:opModeIsActive: before senseBallAndSample");
 
-        //riley.dropFromLander();
+        riley.dropFromLander();
 
         //move towards balls by x inches (if necessary) - yes
         //scan 3 balls, determine gold mineral - yes

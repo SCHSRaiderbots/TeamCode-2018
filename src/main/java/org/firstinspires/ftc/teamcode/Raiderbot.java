@@ -46,6 +46,10 @@ public class Raiderbot {
         Log.d("Status" , "Raiderbot:goToCrater: inside go to crater");
         robotMotors.moveStraightWithGyro(POWER_FULL_FORWARD, GO_TO_CRATER_DIST);
         Log.d("Status" , "Raiderbot:goToCrater: after move to crater");
+
+        robotMotors.moveServo( TURN_MASCOT_SERVO_ANGLE, SERVO_DIRECTION_RIGHT);
+        Log.d("Status" , "SCHSRaiderbot:depositMascot: after move servo up");
+
     }
 
     //turn servo to drop mascot

@@ -39,6 +39,8 @@ public class SCHSMotor extends SCHSController {
         motorLeft.setDirection(Direction.REVERSE);
         motorRight.setDirection(Direction.FORWARD);
 
+        motorArm.setDirection(Direction.REVERSE);
+
         gyroParameters = new BNO055IMU.Parameters();
 
         gyroParameters.mode                = BNO055IMU.SensorMode.IMU;
