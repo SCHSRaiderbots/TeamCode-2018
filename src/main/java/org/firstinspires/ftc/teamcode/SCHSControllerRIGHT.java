@@ -2,6 +2,11 @@ package org.firstinspires.ftc.teamcode;
 
 import android.util.Log;
 
+import com.qualcomm.robotcore.util.ElapsedTime;
+
+
+import android.util.Log;
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -14,12 +19,11 @@ import com.qualcomm.robotcore.util.Range;
 import static com.qualcomm.robotcore.hardware.DcMotor.*;
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.*;
 
-
 import static org.firstinspires.ftc.teamcode.SCHSConstants.*;
 
-@Autonomous(name="SCHSController", group="SCHS")
+@Autonomous(name="SCHSControllerRIGHT", group="SCHS")
 //@Disabled
-public class SCHSController extends LinearOpMode {
+public class SCHSControllerRIGHT extends LinearOpMode  {
 
     private Raiderbot riley = null;
     private SCHSTimer botTimer = null;
@@ -47,6 +51,7 @@ public class SCHSController extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
+
 
         if (isInitialized != true) {
             initialize();
@@ -81,11 +86,11 @@ public class SCHSController extends LinearOpMode {
         riley.senseBallAndSample();
         Log.d("Status" , "SCHSController:opModeIsActive: after sense ball and sample");
 
-        riley.scanPictures(LEFT_TURN);
+        riley.scanPictures(RIGHT_TURN);
         Log.d("Status" , "SCHSController:opModeIsActive: after scanPictures");
 
         //013019 - reduced from 2000
-        sleep(100);
+        sleep(500);
 
         riley.depositMascot();
         Log.d("Status" , "SCHSController:opModeIsActive: after deposit mascot");
@@ -102,5 +107,6 @@ public class SCHSController extends LinearOpMode {
         telemetry.addData("Status", "Run Time: " + runtime.toString());
         telemetry.update();
         //}
+
     }
 }

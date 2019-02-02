@@ -59,7 +59,7 @@ public class Raiderbot {
         Log.d("Status" , "SCHSRaiderbot:depositMascot: after move servo");
     }
 
-    public void scanPictures() {
+    public void scanPictures(int defaultTurnDirection) {
         boolean goldOnLeft = robotTFlow.getIsGoldOnLeft();
         boolean goldOnRight = robotTFlow.getIsGoldOnRight();
         boolean goldOnCenter = robotTFlow.getIsGoldOnCenter();
@@ -70,22 +70,22 @@ public class Raiderbot {
 
         //turn to face the wall picture
         if (goldOnLeft == true){
-            robotMotors.turnWithGyro(0.25, TURN_TO_PICTURE_LEFT_ANGLE, TURN_TO_PICTURE_DIRECTION);
+            robotMotors.turnWithGyro(POWER_TURN_SPEED , TURN_TO_PICTURE_LEFT_ANGLE, TURN_TO_PICTURE_DIRECTION);
             Log.d("Status" , "SCHSRaiderbot:scanPictures: gold on left turn to picture");
             robotMotors.moveStraightWithGyro(POWER_FULL_FORWARD, GO_TO_PICTURE_LEFT_DIST);
             Log.d("Status" , "SCHSRaiderbot:scanPictures: gold on left after move to picture");
         } else if (goldOnRight == true){
-            robotMotors.turnWithGyro(0.25, TURN_TO_PICTURE_RIGHT_ANGLE, TURN_TO_PICTURE_DIRECTION);
+            robotMotors.turnWithGyro(POWER_TURN_SPEED , TURN_TO_PICTURE_RIGHT_ANGLE, TURN_TO_PICTURE_DIRECTION);
             Log.d("Status" , "SCHSRaiderbot:scanPictures: gold on right turn to picture");
             robotMotors.moveStraightWithGyro(POWER_FULL_FORWARD, GO_TO_PICTURE_RIGHT_DIST);
             Log.d("Status" , "SCHSRaiderbot:scanPictures: gold on right after move to picture");
         } else if (goldOnCenter == true){
-            robotMotors.turnWithGyro(0.25, TURN_TO_PICTURE_CENTER_ANGLE, TURN_TO_PICTURE_DIRECTION);
+            robotMotors.turnWithGyro(POWER_TURN_SPEED , TURN_TO_PICTURE_CENTER_ANGLE, TURN_TO_PICTURE_DIRECTION);
             Log.d("Status" , "SCHSRaiderbot:scanPictures: gold on center turn to picture");
             robotMotors.moveStraightWithGyro(POWER_FULL_FORWARD, GO_TO_PICTURE_CENTER_DIST);
             Log.d("Status" , "SCHSRaiderbot:scanPictures: gold on center after move to picture");
         } else {
-            robotMotors.turnWithGyro(0.25, TURN_TO_PICTURE_CENTER_ANGLE, TURN_TO_PICTURE_DIRECTION);
+            robotMotors.turnWithGyro(POWER_TURN_SPEED , TURN_TO_PICTURE_CENTER_ANGLE, TURN_TO_PICTURE_DIRECTION);
             Log.d("Status" , "SCHSRaiderbot:scanPictures: no gold detected turn to picture");
             robotMotors.moveStraightWithGyro(POWER_FULL_FORWARD, GO_TO_PICTURE_CENTER_DIST);
             Log.d("Status" , "SCHSRaiderbot:scanPictures: no gold detected after move to picture");
@@ -99,47 +99,96 @@ public class Raiderbot {
 
         String pictureName = robotVuforia.getPictureDetected();
 
-        if (pictureName.equals(ROVER_PIC) || pictureName.equals(FOOT_PIC)) {
-            robotMotors.turnWithGyro(0.25, TURN_TO_DEPOT_ANGLE, LEFT_TURN);
-            Log.d("Status ", "SCHSRaiderbot:scanPictures: Rover Pic or Foot Pic left turn");
-            robotMotors.moveStraightWithGyro(POWER_FULL_FORWARD, GO_TO_DEPOT_DIST);
-            Log.d("Status ", "SCHSRaiderbot:scanPictures: after move to depot");
+        if (pictureName != null) {
+            if (pictureName.equals(ROVER_PIC) || pictureName.equals(FOOT_PIC)) {
+                robotMotors.turnWithGyro(POWER_TURN_SPEED , TURN_TO_DEPOT_ANGLE, LEFT_TURN);
+                Log.d("Status ", "SCHSRaiderbot:scanPictures: Rover Pic or Foot Pic left turn");
+                robotMotors.moveStraightWithGyro(POWER_FULL_FORWARD, GO_TO_DEPOT_DIST);
+                Log.d("Status ", "SCHSRaiderbot:scanPictures: after move to depot");
 
-        } else if (pictureName.equals(CRATERS_PIC) || pictureName.equals(SPACE_PIC)) {
-            robotMotors.turnWithGyro(0.25, 2*TURN_TO_DEPOT_ANGLE, RIGHT_TURN);
-            Log.d("Status ", "SCHSRaiderbot:scanPictures: Craters Pic or Space Pic right turn");
-            robotMotors.moveStraightWithGyro(POWER_FULL_FORWARD, GO_TO_DEPOT_DIST);
-            Log.d("Status ", "SCHSRaiderbot:scanPictures: after move to depot");
+            } else if (pictureName.equals(CRATERS_PIC) || pictureName.equals(SPACE_PIC)) {
+                robotMotors.turnWithGyro(POWER_TURN_SPEED , (2*TURN_TO_DEPOT_ANGLE) - 5, RIGHT_TURN);
+                Log.d("Status ", "SCHSRaiderbot:scanPictures: Craters Pic or Space Pic right turn");
+                robotMotors.moveStraightWithGyro(POWER_FULL_FORWARD, GO_TO_DEPOT_DIST);
+                Log.d("Status ", "SCHSRaiderbot:scanPictures: after move to depot");
 
+            }
         } else {
             Log.d("Status ", "SCHSRaiderbot:scanPictures: No picture detected");
-            robotMotors.turnWithGyro(0.25, TURN_TO_DEPOT_ANGLE, LEFT_TURN);
-            Log.d("Status ", "SCHSRaiderbot:scanPictures: no pic detected left turn");
+
+            if (defaultTurnDirection == LEFT_TURN) {
+                robotMotors.turnWithGyro(POWER_TURN_SPEED , TURN_TO_DEPOT_ANGLE, defaultTurnDirection);
+                Log.d("Status ", "SCHSRaiderbot:scanPictures: no pic detected left turn");
+            } else {
+                robotMotors.turnWithGyro(POWER_TURN_SPEED , (2*TURN_TO_DEPOT_ANGLE) - 5, defaultTurnDirection);
+                Log.d("Status ", "SCHSRaiderbot:scanPictures: no pic detected right turn");
+            }
             robotMotors.moveStraightWithGyro(POWER_FULL_FORWARD, GO_TO_DEPOT_DIST);
             Log.d("Status ", "SCHSRaiderbot:scanPictures: after move to depot");
         }
+
     }
 
     public void testFunction() throws InterruptedException {
-        robotMotors.turnWithGyro(0.25, 45, RIGHT_TURN);
+
+        /*
+        robotMotors.turnWithGyro(0.25, 45, LEFT_TURN);
+        Log.d("Status ", "SCHSRaiderbot:depositMascot: after turn 45 degrees left");
+
+        Log.d("Status ", "SCHSRaiderbot:depositMascot: turn 1 final angle" + robotMotors.getCurrentAngle());
+
+        robotMotors.turnWithGyro(0.25, 20, LEFT_TURN);
         Log.d("Status ", "SCHSRaiderbot:depositMascot: after turn 20 degrees left");
 
         Log.d("Status ", "SCHSRaiderbot:depositMascot: turn 1 final angle" + robotMotors.getCurrentAngle());
 
-        robotMotors.turnWithGyro(0.25, 90, RIGHT_TURN);
-        Log.d("Status ", "SCHSRaiderbot:depositMascot: after turn 90 degress right");
+        robotMotors.turnWithGyro(0.25, 90, LEFT_TURN);
+        Log.d("Status ", "SCHSRaiderbot:depositMascot: after turn 90 degrees left");
 
-        Log.d("Status ", "SCHSRaiderbot:depositMascot: turn 2 final angle" + robotMotors.getCurrentAngle());
+        Log.d("Status ", "SCHSRaiderbot:depositMascot: turn 1 final angle" + robotMotors.getCurrentAngle());
 
-        robotMotors.turnWithGyro(0.25, 20, RIGHT_TURN);
+        robotMotors.turnWithGyro(0.25, 60, LEFT_TURN);
+        Log.d("Status ", "SCHSRaiderbot:depositMascot: after turn 60 degrees left");
+
+        Log.d("Status ", "SCHSRaiderbot:depositMascot: turn 1 final angle" + robotMotors.getCurrentAngle());
+
+        robotMotors.turnWithGyro(0.25, 180, LEFT_TURN);
+        Log.d("Status ", "SCHSRaiderbot:depositMascot: after turn 180 degrees left");
+
+        Log.d("Status ", "SCHSRaiderbot:depositMascot: turn 1 final angle" + robotMotors.getCurrentAngle());
+*/
+
+
+        robotMotors.turnWithGyro(0.5, 20, RIGHT_TURN);
         Log.d("Status ", "SCHSRaiderbot:depositMascot: after turn 45 degress right");
 
         Log.d("Status ", "SCHSRaiderbot:depositMascot: turn 3 final angle" + robotMotors.getCurrentAngle());
 
-        robotMotors.turnWithGyro(0.25, 180, RIGHT_TURN);
-        Log.d("Status ", "SCHSRaiderbot:depositMascot: after turn 180 degress right");
+        robotMotors.turnWithGyro(0.5, 90, RIGHT_TURN);
+        Log.d("Status ", "SCHSRaiderbot:depositMascot: after turn 90 degress right");
 
-        Log.d("Status ", "SCHSRaiderbot:depositMascot: turn 4 final angle" + robotMotors.getCurrentAngle());
+        Log.d("Status ", "SCHSRaiderbot:depositMascot: turn 2 final angle" + robotMotors.getCurrentAngle());
+
+        robotMotors.turnWithGyro(0.5, 45, RIGHT_TURN);
+        Log.d("Status ", "SCHSRaiderbot:depositMascot: after turn 45 degress right");
+
+        Log.d("Status ", "SCHSRaiderbot:depositMascot: turn 3 final angle" + robotMotors.getCurrentAngle());
+
+        robotMotors.turnWithGyro(0.5, 60, RIGHT_TURN);
+        Log.d("Status ", "SCHSRaiderbot:depositMascot: after turn 90 degress right");
+
+        Log.d("Status ", "SCHSRaiderbot:depositMascot: turn 2 final angle" + robotMotors.getCurrentAngle());
+
+        robotMotors.turnWithGyro(0.5, 180, RIGHT_TURN);
+        Log.d("Status ", "SCHSRaiderbot:depositMascot: after turn 90 degress right");
+
+        Log.d("Status ", "SCHSRaiderbot:depositMascot: turn 2 final angle" + robotMotors.getCurrentAngle());
+
+        /*
+        robotMotors.moveStraightWithGyro(POWER_FULL_FORWARD, 72);
+        sleep(3000);
+        robotMotors.moveStraightWithGyro(POWER_FULL_FORWARD, -72);
+*/
 
         /*
         //move straight using gyro
@@ -158,6 +207,10 @@ public class Raiderbot {
         Log.d("Status" , "SCHSRaiderbot:dropFromLander: inside drop from lander");
         robotMotors.moveLanderArm(POWER_FULL_FORWARD, DROP_FROM_LANDER_DIST, ARM_MOVE_DOWN_DIRECTION);
         Log.d("Status" , "SCHSRaiderbot:dropFromLander: after move arm");
+
+        robotMotors.moveStraightWithGyro(POWER_FULL_FORWARD, -1);
+
+        robotMotors.moveStraightWithGyro(POWER_FULL_FORWARD, 1);
     }
 
     public void senseBallAndSample() throws InterruptedException {
@@ -166,7 +219,8 @@ public class Raiderbot {
         robotMotors.moveStraightWithGyro(POWER_HALF_FORWARD, MOVE_FROM_LANDER_DIST); //perviously speed was 0.2
         Log.d("Status" , "SCHSRaiderbot:senseBallAndSample: after move from lander");
 
-        sleep(2000);
+        //013019 - removing sleeps
+        //sleep(2000);
 
         // Sense the gold cube. Record the angle of the mineral w/ respect to robot.
         robotTFlow.detectGoldMineral();
@@ -174,7 +228,8 @@ public class Raiderbot {
         double turnToGoldAngle = BALL_ANGLE_ERROR * robotTFlow.getMineralAngle();
         Log.d("Status" , "SCHSRaiderbot:senseBallAndSample: turn angle " + turnToGoldAngle);
 
-        sleep(1000);
+        //013019 - reduced from 1000
+        sleep(100);
 
         // Turn robot to face the gold mineral.
         int turnToGoldDirection = 0;
@@ -183,34 +238,35 @@ public class Raiderbot {
         if (turnToGoldAngle < -10) {
             turnToGoldDirection = LEFT_TURN;
             Log.d("Status" , "SCHSRaiderbot:senseBallAndSample: left turn");
-            robotMotors.turnWithGyro(0.25 , turnToGoldAngle - CAMERA_ANGLE_ERROR, turnToGoldDirection);
+            robotMotors.turnWithGyro(POWER_TURN_SPEED  , turnToGoldAngle - CAMERA_ANGLE_ERROR, turnToGoldDirection);
             Log.d("Status" , "SCHSRaiderbot:senseBallAndSample: after turn");
             reverseDirection = RIGHT_TURN;
         } else if (turnToGoldAngle > 10){
             turnToGoldDirection = RIGHT_TURN;
             Log.d("Status" , "SCHSRaiderbot:senseBallAndSample: right turn");
-            robotMotors.turnWithGyro(0.25 , turnToGoldAngle + CAMERA_ANGLE_ERROR, turnToGoldDirection);
+            robotMotors.turnWithGyro(POWER_TURN_SPEED  , turnToGoldAngle, turnToGoldDirection);
             Log.d("Status" , "SCHSRaiderbot:senseBallAndSample: after turn");
             reverseDirection = LEFT_TURN;
         } else if (turnToGoldAngle > -10 && turnToGoldAngle <0) {
             turnToGoldDirection = LEFT_TURN;
             Log.d("Status" , "SCHSRaiderbot:senseBallAndSample: left turn");
-            robotMotors.turnWithGyro(0.25 , turnToGoldAngle + CAMERA_ANGLE_SMALL_ERROR, turnToGoldDirection);
+            robotMotors.turnWithGyro(POWER_TURN_SPEED  , turnToGoldAngle + CAMERA_ANGLE_SMALL_ERROR, turnToGoldDirection);
             Log.d("Status" , "SCHSRaiderbot:senseBallAndSample: after turn");
             reverseDirection = RIGHT_TURN;
             reverseAngle = turnToGoldAngle - CAMERA_ANGLE_SMALL_ERROR;
         } else if (turnToGoldAngle < 10 && turnToGoldAngle > 0) {
             turnToGoldDirection = RIGHT_TURN;
             Log.d("Status" , "SCHSRaiderbot:senseBallAndSample: right turn");
-            robotMotors.turnWithGyro(0.25 , turnToGoldAngle - CAMERA_ANGLE_SMALL_ERROR, turnToGoldDirection);
+            robotMotors.turnWithGyro(POWER_TURN_SPEED  , turnToGoldAngle, turnToGoldDirection);
             Log.d("Status" , "SCHSRaiderbot:senseBallAndSample: after turn");
             reverseDirection = LEFT_TURN;
-            reverseAngle = turnToGoldAngle - CAMERA_ANGLE_SMALL_ERROR;
+            reverseAngle = turnToGoldAngle;
         } else {
             Log.d("Status" , "SCHSRaiderbot:senseBallAndSample: no turn");
         }
 
-        sleep(1000);
+        //013019 - reduced from 1000
+        sleep(100);
 
         // Find distance to the mineral in inches.
         int moveDist = robotTFlow.getMineralDist();
@@ -222,12 +278,16 @@ public class Raiderbot {
         robotMotors.moveStraightWithGyro(POWER_FULL_FORWARD, MOVE_TO_BALL);
         Log.d("Status", "SCHSRaiderbot: after move to mineral");
 
-        sleep(1000);
+        //013019 - reduced from 1000
+        sleep(500);
 
         robotMotors.moveStraightWithGyro(POWER_FULL_FORWARD, MOVE_BACK_FROM_BALL);
         Log.d("Status", "SCHSRaiderbot: after move back from mineral");
 
-        robotMotors.turnWithGyro(0.25, reverseAngle + CAMERA_ANGLE_ERROR, reverseDirection);
+        //013119 - added sleep
+        sleep(100);
+
+        robotMotors.turnWithGyro(POWER_TURN_SPEED , reverseAngle + CAMERA_ANGLE_ERROR, reverseDirection);
         Log.d("Status", "SCHSRaiderbot: after turn back");
 
         // Move back to starting position

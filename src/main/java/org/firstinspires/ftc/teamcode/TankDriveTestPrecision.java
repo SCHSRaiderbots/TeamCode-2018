@@ -16,14 +16,19 @@ public class TankDriveTestPrecision extends LinearOpMode {
     private DcMotor backMotor = null; //config name: backMotor
 
 
+
     @Override
     public void runOpMode() {
 
         leftMotor = hardwareMap.get(DcMotor.class, "leftMotor");
         rightMotor = hardwareMap.get(DcMotor.class, "rightMotor");
-        armMotor = hardwareMap.get(DcMotor.class, "armMotor");
-        armCoreMotor = hardwareMap.get(DcMotor.class, "armCoreMotor");
-        backMotor = hardwareMap.get(DcMotor.class, "backMotor");
+        armMotor = hardwareMap.get(DcMotor.class, "mineralTurnArm");
+        armCoreMotor = hardwareMap.get(DcMotor.class, "mineralExtendArm");
+        backMotor = hardwareMap.get(DcMotor.class, "landerArmMotor");
+
+        //backMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //backMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        //uncomment the above to test the encoder values
 
         //int armMotorPosition, targetPosition;
 
@@ -111,8 +116,8 @@ public class TankDriveTestPrecision extends LinearOpMode {
             else if (gamepad1.b) { //robot will make minute turning adjustments based on left joystick input.
                 //not intended for use longer than a few seconds.
                 //only capable of tank type turning.
-                leftMotor.setPower(powerLeft/4.77);
-                rightMotor.setPower(powerLeft/4.77);
+                leftMotor.setPower(powerLeft/2.77);
+                rightMotor.setPower(powerLeft/2.77);
             } else {
                 leftMotor.setPower(powerLeft);
                 rightMotor.setPower(powerRight);
@@ -121,7 +126,7 @@ public class TankDriveTestPrecision extends LinearOpMode {
             armCoreMotor.setPower(powerArm2);
             backMotor.setPower(backPower);
 
-            //Range setter. If targetPosition is beyond a threshold, sets it to instead match the threshold.
+            //Range setter. If targetPosition is beyond threshold, sets it to instead match the threshold.
 
             /*
             if (targetPosition >= upperThreshold) {
@@ -175,11 +180,3 @@ public class TankDriveTestPrecision extends LinearOpMode {
 
 //minus value = winding
 //plus value = unwinding
-
-//Iwasthirsty
-//IdrankArjun
-//Arjunistasty
-//SidepushKeshav
-//Keshav90degree onRutvik
-//Anshulhavesomefuntimewith Ani 360 degree
-//Hope this creates something delicious

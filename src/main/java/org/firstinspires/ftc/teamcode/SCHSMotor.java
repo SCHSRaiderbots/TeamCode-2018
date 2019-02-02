@@ -250,8 +250,10 @@ public class SCHSMotor extends SCHSController {
 
         double temp = countsPerInch * distance;
 
+        // 0201 org
+        // slowFactor = (Math.abs(temp) + 309)/1550;
         slowFactor = (Math.abs(temp) + 309)/1550;
-        Log.d("Status" , "SCHSMotor:gyroDrive: slowFactor " + slowFactor);
+       Log.d("Status" , "SCHSMotor:gyroDrive: slowFactor " + slowFactor);
 
         // Determine new target position, and pass to motor controller
         newLeftTarget = motorLeft.getCurrentPosition() + encoderValue;
@@ -313,7 +315,10 @@ public class SCHSMotor extends SCHSController {
                 Log.d("Status" , "SCHSMotor:gyroDrive: PCoeff modified slowfactor " + PCoeff);
             }*/
 
-            if (distanceMovedLeft >= slowFactor * Math.abs(newLeftTarget) || distanceMovedRight >= slowFactor * Math.abs(newRightTarget)) {
+//             feb 1st org
+//             if (distanceMovedLeft >= slowFactor * Math.abs(newLeftTarget) || distanceMovedRight>= slowFactor * Math.abs(newRightTarget)) {
+
+              if (Math.abs(distanceMovedLeft) >= slowFactor * Math.abs(newLeftTarget) || Math.abs(distanceMovedRight)>= slowFactor * Math.abs(newRightTarget)) {
                 speed = 0.75 * speed;
                 Log.d("Status" , "SCHSMotor:gyroDrive: speed modified slowfactor " + speed);
             }
@@ -452,11 +457,11 @@ public class SCHSMotor extends SCHSController {
                 currGyro = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
                 Log.d("Status" , "SCHSMotor:turnWithGyro: currGyro" + currGyro);
 
-                if (turnAngle < 60) {
+                /*if (turnAngle < 25) { //020119 changing 0.8 to 0.9
                     if (Math.abs(currGyro - startGyro) >= 0.8 * turnAngle) {
-                        turnSpeed = 0.8 * turnSpeed;
+                        turnSpeed = 0.9 * turnSpeed;
                     }
-                }
+                }*/
 
                 Log.d("Status" , "SCHSMotor:turnWithGyro: turnSpeed" + turnSpeed);
 
@@ -475,11 +480,11 @@ public class SCHSMotor extends SCHSController {
                 currGyro = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
                 Log.d("Status" , "SCHSMotor:turnWithGyro: currGyro" + currGyro);
 
-                if (turnAngle < 60) {
+                /*if (turnAngle < 25) { //013119 changing 0.8 to 0.9 in if condition
                     if (Math.abs(currGyro - startGyro) >= 0.8 * turnAngle) {
-                        turnSpeed = 0.8 * turnSpeed;
+                        turnSpeed = 0.9 * turnSpeed;
                     }
-                }
+                }*/
 
                 Log.d("Status" , "SCHSMotor:turnWithGyro: turnSpeed" + turnSpeed);
 
@@ -548,6 +553,7 @@ public class SCHSMotor extends SCHSController {
             while (motorArm.getCurrentPosition() <= moveArmDist) {
                 motorArm.setPower(powerStart);
                 Log.d("Status" , "SCHSMotor:moveFromLander: powerStart" + powerStart);
+                Log.d("Status" , "SCHSMotor:moveFromLander: curr Position" + motorArm.getCurrentPosition());
 
                 /*if (motorArm.getCurrentPosition() >= 0.9 * moveArmDist) {
                     powerStart = 0.8 * powerStart;

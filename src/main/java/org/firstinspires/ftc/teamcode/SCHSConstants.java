@@ -9,16 +9,15 @@ public final class SCHSConstants {
     static final int GO_TO_WALL_DIST = 24;
     static final int GO_TO_PICTURE_DIST = 30;
     static final int GO_TO_DEPOT_DIST = 48;
-    static final int GO_TO_CRATER_DIST = -72;
-    static final int MOVE_TO_BALL = 18;
-    static final int MOVE_BACK_FROM_BALL = -7;
-    static final int GO_TO_PICTURE_LEFT_DIST = 30;
-    static final int GO_TO_PICTURE_RIGHT_DIST = 38;
-    static final int GO_TO_PICTURE_CENTER_DIST = 36;
-
+    static final int GO_TO_CRATER_DIST = -75;
+    static final int MOVE_TO_BALL = 28; //013019 changed from 18
+    static final int MOVE_BACK_FROM_BALL = -17; //013019 changed from -7
+    static final int GO_TO_PICTURE_LEFT_DIST = 34; //013019 changed from 30
+    static final int GO_TO_PICTURE_RIGHT_DIST = 42;
+    static final int GO_TO_PICTURE_CENTER_DIST = 38;
 
     //measurements and values for dropping from lander
-    static final int DROP_FROM_LANDER_DIST = 8200; //encoder value for now, other unit tbd
+    static final int DROP_FROM_LANDER_DIST = 100; //encoder value for now, other unit tbd
     static final int ARM_MOVE_UP_DIRECTION = 1;
     static final int ARM_MOVE_DOWN_DIRECTION = 2;
 
@@ -27,14 +26,14 @@ public final class SCHSConstants {
     static final double TURN_TO_PICTURE_ANGLE = 50;
     static final double DEPOT_ZONE_TURN_ANGLE = 90;
     static final double CRATER_ZONE_TURN_ANGLE = 90;
-    static final double TURN_TO_DEPOT_ANGLE = 55;
+    static final double TURN_TO_DEPOT_ANGLE = 58;
     static final double BALL_ANGLE_ERROR = 0.75;
-    static final double TURN_TO_PICTURE_LEFT_ANGLE = 65;
+    static final double TURN_TO_PICTURE_LEFT_ANGLE = 60;
     static final double TURN_TO_PICTURE_RIGHT_ANGLE = 60;
-    static final double TURN_TO_PICTURE_CENTER_ANGLE = 55;
+    static final double TURN_TO_PICTURE_CENTER_ANGLE = 57;
     static final double TURN_MASCOT_SERVO_ANGLE = 0.5; //from 0 to 1, where 1 is 180 degrees
-    static final int CAMERA_ANGLE_ERROR = 10;
-    static final int CAMERA_ANGLE_SMALL_ERROR = 5;
+    static final int CAMERA_ANGLE_ERROR = 15; ////013119 changing 10 to 25
+    static final int CAMERA_ANGLE_SMALL_ERROR = 0; //013119 changing 10 to 25
 
     //left or right direction for each turn - int where 1 = left and 2 = right
     static final int TURN_TO_WALL_DIRECTION = 1;
@@ -61,6 +60,7 @@ public final class SCHSConstants {
     static final double POWER_FULL_BACKWARD = -1;
     static final double POWER_HALF_FORWARD = 0.5;
     static final double POWER_HALF_BACKWARD = -0.5;
+    static final double POWER_TURN_SPEED = 0.25;
 
     //Tensor Flow Object detection
     static final String TFOD_MODEL_ASSET = "RoverRuckus.tflite";
@@ -71,13 +71,13 @@ public final class SCHSConstants {
     static final int REAL_HEIGHT_GOLD = 50; //mm
     static final int IMG_HEIGHT = 2448; //pixels
     static final int CAMERA_HEIGHT = 264; //mm, previous value 35
-    static final int SCAN_BALLS_TIME = 10000; // milliseconds
+    static final int SCAN_BALLS_TIME = 5000; // milliseconds
 
     //Vuforia Picture Detection
     static final int CAMERA_FORWARD_DISPLACEMENT  = 110;   // eg: Camera is 110 mm in front of robot center
     static final int CAMERA_VERTICAL_DISPLACEMENT = 200;   // eg: Camera is 200 mm above ground
     static final int CAMERA_LEFT_DISPLACEMENT     = 0;     // eg: Camera is ON the robot's center line
-    static final int SCAN_PICTURE_TIME = 10000; // milliseconds
+    static final int SCAN_PICTURE_TIME = 3000; // milliseconds
     static final String ROVER_PIC = "Blue-Rover";
     static final String CRATERS_PIC = "Front-Craters";
     static final String FOOT_PIC = "Red-Footprint";
