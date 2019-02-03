@@ -10,11 +10,11 @@ public final class SCHSConstants {
     static final int GO_TO_PICTURE_DIST = 30;
     static final int GO_TO_DEPOT_DIST = 48;
     static final int GO_TO_CRATER_DIST = -75;
-    static final int MOVE_TO_BALL = 28; //013019 changed from 18
-    static final int MOVE_BACK_FROM_BALL = -17; //013019 changed from -7
-    static final int GO_TO_PICTURE_LEFT_DIST = 34; //013019 changed from 30
-    static final int GO_TO_PICTURE_RIGHT_DIST = 42;
-    static final int GO_TO_PICTURE_CENTER_DIST = 38;
+    static final int MOVE_TO_BALL = 27; //013019 changed from 18
+    static final int MOVE_BACK_FROM_BALL = -16; //013019 changed from -7
+    static final int GO_TO_PICTURE_LEFT_DIST = 36; //013019 changed from 30
+    static final int GO_TO_PICTURE_RIGHT_DIST = 45;
+    static final int GO_TO_PICTURE_CENTER_DIST = 44;
 
     //measurements and values for dropping from lander
     static final int DROP_FROM_LANDER_DIST = 100; //encoder value for now, other unit tbd
@@ -26,10 +26,10 @@ public final class SCHSConstants {
     static final double TURN_TO_PICTURE_ANGLE = 50;
     static final double DEPOT_ZONE_TURN_ANGLE = 90;
     static final double CRATER_ZONE_TURN_ANGLE = 90;
-    static final double TURN_TO_DEPOT_ANGLE = 58;
+    static final double TURN_TO_DEPOT_ANGLE = 60;
     static final double BALL_ANGLE_ERROR = 0.75;
-    static final double TURN_TO_PICTURE_LEFT_ANGLE = 60;
-    static final double TURN_TO_PICTURE_RIGHT_ANGLE = 60;
+    static final double TURN_TO_PICTURE_LEFT_ANGLE = 65;
+    static final double TURN_TO_PICTURE_RIGHT_ANGLE = 61;
     static final double TURN_TO_PICTURE_CENTER_ANGLE = 57;
     static final double TURN_MASCOT_SERVO_ANGLE = 0.5; //from 0 to 1, where 1 is 180 degrees
     static final int CAMERA_ANGLE_ERROR = 15; ////013119 changing 10 to 25
