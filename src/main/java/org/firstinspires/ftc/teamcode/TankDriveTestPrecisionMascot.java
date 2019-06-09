@@ -1,20 +1,29 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.util.Log;
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+
+import static org.firstinspires.ftc.teamcode.SCHSConstants.SERVO_DIRECTION_LEFT;
+import static org.firstinspires.ftc.teamcode.SCHSConstants.SERVO_DIRECTION_RIGHT;
+import static org.firstinspires.ftc.teamcode.SCHSConstants.TURN_MASCOT_SERVO_ANGLE;
 
 //This program can be used to drive the robot like a tank.
 
 @TeleOp
-public class TankDriveTestPrecision extends LinearOpMode {
+public class TankDriveTestPrecisionMascot extends LinearOpMode {
 
     private DcMotor leftMotor = null; //config name: leftMotor
     private DcMotor rightMotor = null; //config name: rightMotor
     private DcMotor armMotor = null; //config name: armMotor
     private DcMotor armCoreMotor = null; //config name: armCoreMotor
     private DcMotor backMotor = null; //config name: backMotor
+    private Servo mascotServo = null;
+    private SCHSMotor mascotControl = null;
 
     @Override
     public void runOpMode() {
@@ -24,6 +33,10 @@ public class TankDriveTestPrecision extends LinearOpMode {
         armMotor = hardwareMap.get(DcMotor.class, "mineralTurnArm");
         armCoreMotor = hardwareMap.get(DcMotor.class, "mineralExtendArm");
         backMotor = hardwareMap.get(DcMotor.class, "landerArmMotor");
+        mascotServo = hardwareMap.servo.get("mascotServo");
+
+        //mascotControl = new SCHSMotor();
+        //mascotControl.initialize(hardwareMap);
 
         //backMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         //backMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -124,6 +137,23 @@ public class TankDriveTestPrecision extends LinearOpMode {
 
             armCoreMotor.setPower(powerArm2);
             backMotor.setPower(backPower);
+
+            /*// Move Mascot servo using A and B on arms controller
+            if (gamepad2.a) {
+                mascotControl.moveServo(TURN_MASCOT_SERVO_ANGLE, SERVO_DIRECTION_LEFT);
+            } else if (gamepad2.b) {
+                mascotControl.moveServo(-TURN_MASCOT_SERVO_ANGLE, SERVO_DIRECTION_LEFT);
+            } else {
+                telemetry.addData("TankDriveTestPrecisionMascot: OH NO! Wrong Servo Move!", 0);
+            }*/
+
+            if (gamepad2.a) {
+                mascotServo.setPosition(0.5);
+            } else if (gamepad2.b) {
+                mascotServo.setPosition(0.9);
+            } else {
+                telemetry.addData("TankDriveTestPrecisionMascot: OH NO! Wrong Servo Move!", 0);
+            }
 
             //Range setter. If targetPosition is beyond threshold, sets it to instead match the threshold.
 
